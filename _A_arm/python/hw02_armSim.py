@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import armParam as P
-from signalGenerator import signalGenerator
-from armAnimation import armAnimation
-from dataPlotter import dataPlotter
+from signalGenerator import signalGenerator #signal generator will not change for each HW!!
+from armAnimation import armAnimation #might change on our HW
+from dataPlotter import dataPlotter #might change on our HW.
 
 # instantiate reference input classes
 reference = signalGenerator(amplitude=0.5, frequency=0.1)
