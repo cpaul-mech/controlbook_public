@@ -1,29 +1,29 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import armParam as P
+import massParam as P
 from signalGenerator import signalGenerator #signal generator will not change for each HW!!
-from armAnimation import armAnimation #might change on our HW
-from dataPlotter import dataPlotter #might change on our HW.
+from massAnimation import massAnimation 
+from dataPlotter import dataPlotter as dp #This is allowed, but not really necessary.
 
 # instantiate reference input classes
 reference = signalGenerator(amplitude=0.5, frequency=0.1) #Reference is the thing we want our system to do.
-thetaRef = signalGenerator(amplitude=2.0*np.pi, frequency=0.1)
-tauRef = signalGenerator(amplitude=5, frequency=.5)
+zsignal = signalGenerator(amplitude=2.0*np.pi, frequency=0.1) # the theta will be the result of numerical integration of the position of the system.
+rsignal = signalGenerator(amplitude=5, frequency=.5) #the tau comes from the controller.
 
 # instantiate the simulation plots and animation
-dataPlot = dataPlotter() #need to make them or we cannot use them. 
-animation = armAnimation()
+dataPlot = dp() #need to make them or we cannot use them. 
+animation = massAnimation()
 
 t = P.t_start  # time starts at t_start
 while t < P.t_end:  # main simulation loop
     # set variables
     r = reference.square(t)
-    theta = thetaRef.sin(t)
-    tau = tauRef.sawtooth(t)
+    z = zsignal.sin(t)
+    F = rsignal.sawtooth(t)
     # update animation
-    state = np.array([[theta], [0.0]])  #state is made of theta, and theta_dot
+    state = np.array([[z], [0.0]])  #state is made of theta, and theta_dot
     animation.update(state)
-    dataPlot.update(t, r, state, tau)
+    dataPlot.update(t, r, state, F)
     # advance time by t_plot
     t = t + P.t_plot  
     plt.pause(0.001)  # allow time for animation to draw
