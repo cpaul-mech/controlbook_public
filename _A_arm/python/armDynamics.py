@@ -30,7 +30,7 @@ class armDynamics:
         y = self.h()  # return the corresponding output
         return y
 
-    def f(self, state, tau):
+    def f(self, state, tau): #if you dont define the right order for self.state, then the dynamics test cases will not work.
         # Return xdot = f(x,u), the system state update equations
         # re-label states for readability
         theta = state[0][0]
@@ -42,13 +42,13 @@ class armDynamics:
         return xdot
 
     def h(self):
-        # return the output equations
+        # return the output equations 
         # could also use input u if needed
         theta = self.state[0][0]
         y = np.array([[theta]])
         return y
 
-    def rk4_step(self, u):
+    def rk4_step(self, u): # Just COPY THIS OVER FOR THE HOMEWORK.
         # Integrate ODE using Runge-Kutta RK4 algorithm
         F1 = self.f(self.state, u)
         F2 = self.f(self.state + self.Ts / 2 * F1, u)
