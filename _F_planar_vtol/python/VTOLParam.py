@@ -17,26 +17,26 @@ length = 10.0
 z0 = 1.0  # initial lateral position
 h0 =  1.0 # initial altitude
 theta0 = np.pi*(1.0/16.0) # initial roll angle
-zdot0 = 0  # initial lateral velocity
-hdot0 = 0  # initial climb rate
-thetadot0 = 0 # initial roll rate
-target0 = 0
+zdot0 = 0.0  # initial lateral velocity
+hdot0 = 0.0  # initial climb rate
+thetadot0 = 0.0 # initial roll rate
+target0 = 0.0
 
 # Simulation Parameters
-t_start = 0 # Start time of simulation
-t_end =  10 # End time of simulation
+t_start = 0.0 # Start time of simulation
+t_end =  10.0 # End time of simulation
 Ts =  0.01 # sample time for simulation
 t_plot = 1.0/30.0 # the plotting and animation is updated at this rate
 
 # saturation limits
-fmax = 10  # Max Force, N
+fmax = 10.0  # Max Force, N
 
 # dirty derivative parameters
 # sigma =   # cutoff freq for dirty derivative
 # beta =  # dirty derivative gain
 
 # equilibrium force
-# Fe =
+Fe = (mc+2.0*mr)*g
 
 # mixing matrix
 unmixing = np.array([[1.0, 1.0], [d, -d]]) # converts fl and fr (LR) to force and torque (FT)

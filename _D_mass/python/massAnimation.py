@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib
 import numpy as np 
 import massParam as P
 # if you are having difficulty with the graphics, 
@@ -12,7 +13,7 @@ import massParam as P
 # matplotlib.use('gtk4agg')  # requires pyGObject and pycairo
 # matplotlib.use('gtk3cairo')  # requires pyGObject and pycairo
 # matplotlib.use('gtk4cairo')  # requires pyGObject and pycairo
-# matplotlib.use('tkagg')  # requires TkInter
+matplotlib.use('tkagg')  # requires TkInter
 # matplotlib.use('wxagg')  # requires wxPython
 
 

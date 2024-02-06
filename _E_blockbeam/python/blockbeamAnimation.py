@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np 
@@ -12,7 +13,7 @@ import blockbeamParam as P
 # matplotlib.use('gtk4agg')  # requires pyGObject and pycairo
 # matplotlib.use('gtk3cairo')  # requires pyGObject and pycairo
 # matplotlib.use('gtk4cairo')  # requires pyGObject and pycairo
-# matplotlib.use('tkagg')  # requires TkInter
+matplotlib.use('tkagg')  # requires TkInter
 # matplotlib.use('wxagg')  # requires wxPython
 
 

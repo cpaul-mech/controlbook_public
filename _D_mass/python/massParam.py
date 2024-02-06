@@ -11,21 +11,21 @@ length = 5.0
 width = 1.0
 
 # Initial Conditions
-z0 = 0     # initial position of mass, m
-zdot0 = 0  # initial velocity of mass m/s
+z0 = 0.0     # initial position of mass, m
+zdot0 = 0.0  # initial velocity of mass m/s
 
 # Simulation Parameters
-t_start = 0 # Start time of simulation
-t_end = 10  # End time of simulation
+t_start = 0.0 # Start time of simulation
+t_end = 10.0  # End time of simulation
 Ts = 0.01   # sample time for simulation
 t_plot = 1.0/30.0  # the plotting and animation is updated at this rate
 # this is the step at which we're numericcally integrating, and the 30 
 # is the rate of the sampling? might be an incorrect assumption.
 
 # dirty derivative parameters
-# sigma =  # cutoff freq for dirty derivative
-# beta =   # dirty derivative gain
+sigma = 0.05 # cutoff freq for dirty derivative
+beta = (2.0*sigma-Ts)/(2.0*sigma+Ts)  # dirty derivative gain
 
 # saturation limits
-# F_max =   # Max force, N
+F_max =  6.0 # Max force, N
 
