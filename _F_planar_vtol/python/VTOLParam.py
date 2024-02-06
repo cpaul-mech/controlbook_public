@@ -2,13 +2,13 @@
 import numpy as np
 
 # Physical parameters of the  VTOL known to the controller
-mc = 1.5 # kg
-mr =  0.2 # kg
-Jc =  1.1 # kg m^2
-d = 0.05  # m
-mu = 2.0  # kg/s
+mc = 1.0 # kg
+mr =  0.25 # kg
+Jc =  0.0042# kg m^2
+d = 0.3  # m
+mu = 0.1  # kg/s
 g = 9.81  # m/s^2
-F_wind = 10 # wind disturbance force is zero in initial homeworks
+F_wind = 0.0 # wind disturbance force is zero in initial homeworks
 
 # parameters for animation
 length = 10.0
@@ -35,10 +35,10 @@ fmax = 10.0  # Max Force, N
 # sigma =   # cutoff freq for dirty derivative
 # beta =  # dirty derivative gain
 
-# equilibrium force
-Fe = (mc+2.0*mr)*g
 
 # mixing matrix
 unmixing = np.array([[1.0, 1.0], [d, -d]]) # converts fl and fr (LR) to force and torque (FT)
 mixing = np.linalg.inv(unmixing) # converts force and torque (FT) to fl and fr (LR) 
 
+# equilibrium force
+Fe = (mc+2.0*mr)*g
