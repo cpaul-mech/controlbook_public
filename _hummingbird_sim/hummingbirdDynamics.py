@@ -45,7 +45,7 @@ class HummingbirdDynamics:
         y = self.h()  # return the corresponding output
         return y
 
-    def f(self, state, pwm):
+    def f(self, state, pwm): # u becomes pwm
         # Return xdot = f(x,u)
         phidot = state[3][0]
         thetadot = state[4][0]
@@ -77,10 +77,9 @@ class HummingbirdDynamics:
         return xdot
 
     def h(self):
-        # FIXME Fill in this function
         # return y = h(x)
         phi = self.state[0][0]
-        theta = self.state
+        theta = self.state[1][0]
         psi = self.state[2][0]
         y = np.array([[phi], [theta], [psi]])
         return y
@@ -101,15 +100,15 @@ class HummingbirdDynamics:
         thetadot = state[4][0]
         psidot = state[5][0]
         # Fill out M22, M23, and M33
-        M22 = self.m1 * self.ell1**2 + self.m2*self.ell2**2 + self.J2y + self.J1y*np.cos(phi)**2 + self.J1z*np.sin(phi)**2
-        M23 = (self.J1z - self.J1y)*np.sin(phi)*np.cos(phi)*np.cos(theta)
-        M33 = (self.m1*self.ell1**2 + self.m2*self.ell2**2 + self.J2z + self.J1y*np.sin(phi)**2 + self.J1z*np.cos(phi)**2)*np.cos(theta)**2 + (self.J1x + self.J2x)*np.sin(theta)**2 + self.m3*(self.ell3x**2 + self.ell3y**2) + self.J3z
+        M22 = self.m1 * self.ell1**2+self.m2*self.ell2**2+self.J2y+self.J1y*np.cos(phi)**2+self.J1z*np.sin(phi)**2
+        M23 = (self.J1y-self.J1z)*np.sin(phi)*np.cos(phi)*np.cos(theta)
+        M33 = (self.m1*((self.ell1)**2)+self.m2*self.ell2**2+self.J2z+self.J1y*np.sin(phi)**2+self.J1z*np.cos(phi)**2)*np.cos(theta)**2+(self.J1x+self.J2x)*np.sin(theta)**2+self.m3*(self.ell3x**2+self.ell3y**2)+self.J3z
 
         # Return the M matrix
-        return np.array([[self.J1x, 0, -self.J1x*np.sin(theta)],
-                      [0, M22, M23],
-                      [-self.J1x*np.sin(theta), M23, M33]
-                      ])
+        return np.array([[self.J1x, 0.0, -self.J1x*np.sin(theta)],
+                         [0.0, M22, M23],
+                         [-self.J1x*np.sin(theta), M23, M33]
+                         ])
 
     def _C(self, state):
         #extact any necessary variables from the state
@@ -119,10 +118,12 @@ class HummingbirdDynamics:
         thetadot = state[4][0]
         psidot = state[5][0]
         # Return the C matrix
-        return np.array([[(self.J1y - self.J1z)*np.sin(phi)*np.cos(phi)*(thetadot**2 - np.cos(theta)**2*psidot**2) + ((self.J1y - self.J1z)*(np.cos(phi)**2 - np.sin(phi)**2) - self.J1x)*np.cos(theta)*thetadot*psidot],
-                      [2.0*(self.J1z - self.J1y)*np.sin(phi)*np.cos(phi)*phidot*thetadot + ((self.J1y - self.J1z)*(np.cos(phi)**2 - np.sin(phi)**2) + self.J1x)*np.cos(theta)*phidot*psidot - 0.5*(2.0*(self.J1x + self.J2x - self.m1*self.ell1**2-self.m2*self.ell2**2 - self.J2z - self.J1y*np.sin(phi)**2 - self.J1z*np.cos(phi)**2)*np.sin(theta)*np.cos(theta))*phidot**2],
-                      [thetadot**2*(self.J1z - self.J1y)*np.sin(phi)*np.cos(phi)*np.sin(theta) + ((self.J1y - self.J1z)*(np.cos(phi)**2 - np.sin(phi)**2) - self.J1x)*np.cos(theta)*phidot*psidot + (self.J1z - self.J1y)*np.sin(phi)*np.cos(phi)*np.sin(theta)*thetadot**2 + 2.0*(self.J1y - self.J1z)*np.sin(phi)*np.cos(phi)*phidot*psidot +
-                       2.0*(-self.m1*self.ell1**2 - self.m2*self.ell2**2 - self.J2z + self.J1x + self.J2x + self.J1y*np.sin(phi)**2 + self.J1z*np.sin(phi)**2)*np.sin(theta)*np.cos(theta)*thetadot*psidot],
+        N33 = 2*(self.J1x+self.J2x-self.m1*self.ell1**2-self.m2*self.ell2**2-self.J2z-self.J1y*np.sin(phi)**2-self.J1z*np.cos(phi)**2)*np.sin(theta)*np.cos(theta)
+        return np.array([[(self.J1y-self.J1z)*np.sin(phi)*np.cos(phi)*(thetadot**2-np.cos(theta)**2*psidot**2)+((self.J1y-self.J1z)*(np.cos(phi)**2-np.sin(phi)**2)-self.J1x)*np.cos(theta)*thetadot*psidot],
+                      [2.0*(self.J1z-self.J1y)*np.sin(phi)*np.cos(phi)*phidot*thetadot+((self.J1y-self.J1z)*(np.cos(phi)**2-np.sin(phi)**2)+self.J1x)*np.cos(theta)*phidot*psidot-0.5*N33*psidot**2],
+                      [thetadot**2*(self.J1z-self.J1y)*np.sin(phi)*np.cos(phi)*np.sin(theta)+((self.J1y-self.J1z)*(np.cos(phi)**2-np.sin(phi)**2)-self.J1x)*np.cos(theta)*phidot*thetadot
+                       +(self.J1z-self.J1y)*np.sin(phi)*np.cos(phi)*np.sin(theta)*thetadot**2+2.0*(self.J1y-self.J1z)*np.sin(phi)*np.cos(phi)*phidot*psidot+
+                       2.0*(-self.m1*self.ell1**2-self.m2*self.ell2**2-self.J2z+self.J1x+self.J2x+self.J1y*np.sin(phi)**2+self.J1z*np.sin(phi)**2)*np.sin(theta)*np.cos(theta)*thetadot*psidot],
                      ])
         
     def _partialP(self, state):
@@ -130,7 +131,7 @@ class HummingbirdDynamics:
         theta = state[1][0]
         # Return the partialP array
         return np.array([[0.0],
-                        [(self.m1*self.ell1 + self.m2*self.ell2)*self.g*np.cos(theta)],
+                        [(self.m1*self.ell1+self.m2*self.ell2)*P.g*np.cos(theta)],
                         [0.0],
                         ])
     
@@ -157,7 +158,7 @@ class HummingbirdDynamics:
         # Return the tau matrix
         return np.array([[torque],
                         [self.ellT* force * np.cos(phi)],
-                        [self.ellT*force*np.cos(theta)*np.sin(phi) - torque*np.sin(theta)]])
+                        [self.ellT*force*np.cos(theta)*np.sin(phi)-torque*np.sin(theta)]])
     
     def _B(self):
         # FIXME Fill in this function

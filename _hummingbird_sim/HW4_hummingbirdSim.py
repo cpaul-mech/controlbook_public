@@ -4,33 +4,33 @@ import hummingbirdParam as P
 from signalGenerator import SignalGenerator
 from hummingbirdAnimation import HummingbirdAnimation
 from dataPlotter import DataPlotter
-from hummingbirdDynamics import HummingbirdDynamics
+from hummingbirdDynamics import HummingbirdDynamics as dynamics
+from ctrlequilibrium import Controller
 
 # instantiate reference input classes
 phi_ref = SignalGenerator(amplitude=1.5, frequency=0.05)
 theta_ref = SignalGenerator(amplitude=0.5, frequency=0.05)
 psi_ref = SignalGenerator(amplitude=0.5, frequency=.05)
-force_ell_ref = SignalGenerator(amplitude=1.0, frequency=.05)
-force_r_ref = SignalGenerator(amplitude=1.0, frequency=.03)
 
 # instantiate the simulation plots and animation
 dataPlot = DataPlotter()
 animation = HummingbirdAnimation()
-dynamics = HummingbirdDynamics()
-
+ctrl = Controller()
 t = P.t_start  # time starts at t_start
 while t < P.t_end:  # main simulation loop
-    t_next_plot = t + P.t_plot  # set the next time to plot
     # set variables
-    while t< t_next_plot:
-        force = np.array([[force_ell_ref.sin(t)], [force_r_ref.sin(t)]])
-        state = dynamics.state
-        ref = np.array([[0.0], [0.0], [0.0]])
-        dynamics.update(force)
-        t = t + P.Ts
-        
+    phi = phi_ref.sin(t)
+    theta = 0#theta_ref.sin(t)
+    psi = 0#psi_ref.sin(t)
+    u = ctrl.update([phi, theta, psi])
+    # update animation
+    state = np.array([[phi], [theta], [psi], [0.0], [0.0], [0.0]])
+    ref = np.array([[0], [0], [0]])
+    force = 0
+    torque = 0
     animation.update(t, state)
-    dataPlot.update(t, state, ref, force)
+    dataPlot.update(t, state, ref, force, torque)
+
     t = t + P.t_plot  # advance time by t_plot
     plt.pause(0.05)
 

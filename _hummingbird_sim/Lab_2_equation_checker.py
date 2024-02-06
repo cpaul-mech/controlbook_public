@@ -38,7 +38,7 @@ M = Matrix([[J1x, 0, -J1x*sin(theta)],
                       [-J1x*sin(theta), M23, M33]
                       ])
 C = Matrix([[(J1y - J1z)*sin(phi)*cos(phi)*(thetadot**2 - cos(theta)**2*psidot**2) + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) - J1x)*cos(theta)*thetadot*psidot],
-                [2.0*(J1z - J1y)*sin(phi)*cos(phi)*phidot*thetadot + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) + J1x)*cos(theta)*phidot*psidot - 0.5*(2.0*(J1x + J2x - m1*ell1**2-m2*ell2**2 - J2z - J1y*sin(phi)**2 - J1z*cos(phi)**2)*sin(theta)*cos(theta))*phidot**2],
+                [2.0*(J1z - J1y)*sin(phi)*cos(phi)*phidot*thetadot + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) + J1x)*cos(theta)*phidot*psidot - 0.5*(2.0*(J1x + J2x - m1*ell1**2-m2*ell2**2 - J2z - J1y*sin(phi)**2 - J1z*cos(phi)**2)*sin(theta)*cos(theta))*psidot**2],
                 [thetadot**2*(J1z - J1y)*sin(phi)*cos(phi)*sin(theta) + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) - J1x)*cos(theta)*phidot*psidot + (J1z - J1y)*sin(phi)*cos(phi)*sin(theta)*thetadot**2 + 2.0*(J1y - J1z)*sin(phi)*cos(phi)*phidot*psidot +
                 2.0*(-m1*ell1**2 - m2*ell2**2 - J2z + J1x + J2x + J1y*sin(phi)**2 + J1z*sin(phi)**2)*sin(theta)*cos(theta)*thetadot*psidot],
                 ])
