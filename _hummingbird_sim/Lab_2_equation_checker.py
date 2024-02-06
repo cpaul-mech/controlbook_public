@@ -33,24 +33,24 @@ psidotdot = psidot.diff()
 
 # Create the missing Symbols 
 g, pwm_left, pwm_right, ellT, d, km, M22, M23, M33 = sp.symbols('g pwm_left pwm_right ellT d km M22 M23 M33')
-M = simplify(Matrix([[J1x, 0, -J1x*sin(theta)],
+M = Matrix([[J1x, 0, -J1x*sin(theta)],
                       [0, M22, M23],
                       [-J1x*sin(theta), M23, M33]
-                      ]))
-C = simplify(Matrix([[(J1y - J1z)*sin(phi)*cos(phi)*(thetadot**2 - cos(theta)**2*psidot**2) + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) - J1x)*cos(theta)*thetadot*psidot],
+                      ])
+C = Matrix([[(J1y - J1z)*sin(phi)*cos(phi)*(thetadot**2 - cos(theta)**2*psidot**2) + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) - J1x)*cos(theta)*thetadot*psidot],
                 [2.0*(J1z - J1y)*sin(phi)*cos(phi)*phidot*thetadot + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) + J1x)*cos(theta)*phidot*psidot - 0.5*(2.0*(J1x + J2x - m1*ell1**2-m2*ell2**2 - J2z - J1y*sin(phi)**2 - J1z*cos(phi)**2)*sin(theta)*cos(theta))*phidot**2],
                 [thetadot**2*(J1z - J1y)*sin(phi)*cos(phi)*sin(theta) + ((J1y - J1z)*(cos(phi)**2 - sin(phi)**2) - J1x)*cos(theta)*phidot*psidot + (J1z - J1y)*sin(phi)*cos(phi)*sin(theta)*thetadot**2 + 2.0*(J1y - J1z)*sin(phi)*cos(phi)*phidot*psidot +
                 2.0*(-m1*ell1**2 - m2*ell2**2 - J2z + J1x + J2x + J1y*sin(phi)**2 + J1z*sin(phi)**2)*sin(theta)*cos(theta)*thetadot*psidot],
-                ]))
-partialP = simplify(Matrix([[0.0],
+                ])
+partialP = Matrix([[0.0],
                         [(m1*ell1 + m2*ell2)*g*cos(theta)],
                         [0.0],
-                    ]))
+                    ])
 force = km * (pwm_left + pwm_right)
 torque = d * km * (pwm_left - pwm_right) # what are the actual forces? seems like we'll need to convert them at some point. 
-tau = simplify(Matrix([[d*(pwm_left - pwm_right)],
+tau = Matrix([[d*(pwm_left - pwm_right)],
                 [ellT*(pwm_left + pwm_right)*cos(phi)],
-                [ellT*(pwm_left + pwm_right)*cos(theta)*sin(phi) - d*(pwm_left - pwm_right)*sin(theta)]]))
+                [ellT*(pwm_left + pwm_right)*cos(theta)*sin(phi) - d*(pwm_left - pwm_right)*sin(theta)]])
 # %%
 print("M =")
 display(Math(vlatex(M)))

@@ -26,7 +26,7 @@ while t < P.t_end:  # main simulation loop
     force = 0
     torque = 0
     animation.update(t, state)
-    dataPlot.update(t, state, ref, force, torque)
+    dataPlot.update(t, state, ref, force)
 
     t = t + P.t_plot  # advance time by t_plot
     plt.pause(0.05)
