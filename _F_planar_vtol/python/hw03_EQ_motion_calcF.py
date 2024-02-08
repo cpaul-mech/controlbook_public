@@ -66,15 +66,10 @@ display(Math(vlatex(Left_side_EQ_Motion_E)))
 #%%
 ## Define Generalized Forces
 # defining symbols for external force and friction
-F, tau = 
+F, tau, ell = symbols('F tau ell')
 r1 = Matrix([[ell*cos(theta)], [ell*sin(theta)], [0]])
 F1 = Matrix([[0], [F], [0]])
-#Dot product of the derivative of r1 with respect to z and the force F1
-Q1 = diff(r1,z).dot(F1)
 
-Q2 = diff(r1,theta).dot(F1)
-Q = Matrix([[Q1], [Q2]])
-display(Math(vlatex(Q)))
 #%% 
 ############################################################
 ### Including friction and generalized forces, then solving for highest order derivatives

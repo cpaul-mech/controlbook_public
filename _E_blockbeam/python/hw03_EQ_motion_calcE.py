@@ -14,7 +14,7 @@ from sympy import sin, cos, diff, Matrix, symbols, Function, pretty_print, simpl
 #init_printing(use_latex=True)
 
 #defining mathematical variables (called symbols in sp) and time varying functions like z and theta
-t, m1, m2, ell, g = symbols('t, m1, m2, ell, g')
+t, m1, m2, ell, g, Jz = symbols('t, m1, m2, ell, g, Jz')
 
 z = dynamicsymbols('z')
 theta = dynamicsymbols('theta')
@@ -26,19 +26,26 @@ qdot = q.diff(t)
 
 #defining the kinetic energy
 p1 = Matrix([[z*cos(theta)], [z*sin(theta)], [0]])
-p2 = Matrix([[(ell*cos(theta)/2)], [ell*sin(theta)/2], [0]])
+p2 = Matrix([[((ell*cos(theta))/2)], [(ell*sin(theta))/2], [0]])
 
 v1 = diff(p1, t)
 v2 = diff(p2, t)
-
+step1 = v1.T*v1
+step2 = v2.T*v2
+# display(Math(vlatex(step1)))
+# display(Math(vlatex(step2)))
+Jz = (m2*ell**2)/12.0
 omega = Matrix([[0], [0], [diff(theta,t)]])
-J = Matrix([[0, 0, 0], [0, 0, 0], [0, 0, m1*ell**2/12.0]])
+J = Matrix([[0, 0, 0], [0, 0, 0], [0, 0, Jz]])
 
 #%%
-K = simplify(0.5*m1*v1.T*v1 + 0.5*m2*v2.T*v2 + 0.5*omega.T*J*omega)
+K = (0.5*m1*step1 + 0.5*m2*step2 + 0.5*omega.T*J*omega)
+display(Math(vlatex(K)))
+K = simplify(K)
 display(Math(vlatex(K)))
 # just grabbing the scalar inside this matrix so that we can do L = K-P, since P is a scalar
 K = K[0,0]
+
 
 #%%
 #defining potential energy 
@@ -94,46 +101,9 @@ result = simplify(sp.solve(full_eom, (zdd, thetadd)))
 zdd_eom = result[zdd]  # EOM for zdd, as a function of states and inputs
 thetadd_eom = result[thetadd] # EOM for thetadd, as a function of states and inputs
 
-display(Math(vlatex(zdd_eom)))
-display(Math(vlatex(thetadd_eom)))
-
-mass_matrix = Matrix([[m1+m2, m1*ell/2*cos(theta)], [m1*ell/2*cos(theta), m1*ell**2/3]])
-
-#%% [markdown]
-# Let's take a look at the inverse of the mass matrix (to compare against the solution shown in the book). 
-
-# %%
-display(Math(vlatex(mass_matrix.inv())))
-
-
-
-#%% [markdown]
-# OK, now we can see if I can get the state variable form of the equations of motion.
-
-#%%
-# defining fixed parameters that are not states or inputs (like g, ell, m1, m2, b)
-params = [(m1, 0.25), (m2, 1.), (ell, 1.), (g, 9.8), (b, 0.05)] #this a python list of tuples.
-
-# substituting parameters into the equations of motion
-zdd_eom = zdd_eom.subs(params)
-thetadd_eom = thetadd_eom.subs(params)
-
-# now defining the state variables that will be passed into f(x,u) 
-state = [zd, z, thetad, theta]
-ctrl_input = [F]
-
-# defining the function that will be called to get the derivatives of the states
-state_dot = [zdd_eom, zd, thetadd_eom, thetad]
-
-# converting the function to a callable function that uses numpy to evaluate and 
-# return a list of state derivatives
-f = sp.lambdify(state + ctrl_input, state_dot)
-
-# calling the function as a test to see if it works, could do something like this 
-# in a simulation
-
-# f(zd, z, thetad, theta, F)
-print("x_dot = ", f(0, 0, 0, 0, 1))
+# display(Math(vlatex(zdd_eom)))
+# display(Math(vlatex(thetadd_eom)))
+display(Math(vlatex(result)))
 
 #%% [markdown] 
 # Although not covered in this class, there are ways to store this function and just re-load it

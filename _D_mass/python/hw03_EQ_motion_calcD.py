@@ -45,7 +45,6 @@ EL_case_studyB = simplify( diff(diff(L, qdot), t) - diff(L, q) )
 display(Math(vlatex(EL_case_studyB)))
 
 
-
 #%% 
 ############################################################
 ### Including friction and generalized forces, then solving for highest order derivatives
@@ -75,41 +74,14 @@ display(Math(vlatex(result)))
 
 
 
-#%% [markdown]
-# Let's take a look at the inverse of the mass matrix (to compare against the solution shown in the book). 
-
-# %%
-display(Math(vlatex(mass_matrix.inv())))
-
-
 
 #%% [markdown]
 # OK, now we can see if I can get the state variable form of the equations of motion.
 
-#%%
-# defining fixed parameters that are not states or inputs (like g, ell, m1, m2, b)
-params = [(m1, 0.25), (m2, 1.), (ell, 1.), (g, 9.8), (b, 0.05)] #this a python list of tuples.
-
-# substituting parameters into the equations of motion
-zdd_eom = zdd_eom.subs(params)
-thetadd_eom = thetadd_eom.subs(params)
-
 # now defining the state variables that will be passed into f(x,u) 
-state = [zd, z, thetad, theta]
-ctrl_input = [F]
+
 
 # defining the function that will be called to get the derivatives of the states
-state_dot = [zdd_eom, zd, thetadd_eom, thetad]
-
-# converting the function to a callable function that uses numpy to evaluate and 
-# return a list of state derivatives
-f = sp.lambdify(state + ctrl_input, state_dot)
-
-# calling the function as a test to see if it works, could do something like this 
-# in a simulation
-
-# f(zd, z, thetad, theta, F)
-print("x_dot = ", f(0, 0, 0, 0, 1))
 
 #%% [markdown] 
 # Although not covered in this class, there are ways to store this function and just re-load it
