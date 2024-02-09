@@ -49,7 +49,8 @@ K = K[0,0]
 
 #%%
 #defining potential energy 
-P = m1*g*z*sin(theta) + m2*g*(z*sin(theta))
+P = m1*g*z*sin(theta) + m2*g*ell*(sin(theta))/2.0
+display(Math(vlatex(P)))
 
 #calculate the lagrangian, using simplify intermittently can help the equations to be
 #simpler, there are also options for factoring and grouping if you look at the sympy
@@ -91,6 +92,8 @@ thetadd = thetad.diff(t)
 # defining the right-hand side of the equation and combining it with E-L part
 RHS = Q
 full_eom = Left_side_EQ_Motion_E - RHS
+print("Full EOM:")
+display(Math(vlatex(full_eom)))
 
 #%%
 # finding and assigning zdd and thetadd

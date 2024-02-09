@@ -1,3 +1,4 @@
+#%%
 from hw03_EQ_motion_calcE import *
 
 
@@ -13,8 +14,17 @@ from hw03_EQ_motion_calcE import *
 state_variable_form = Matrix([[zdd_eom], [zd], [thetadd_eom], [thetad]])
 states = Matrix([[zd], [z], [thetad], [theta]])
 inputs = Matrix([[F]])
-
-
+# %% [markdown]
+# Set all the derivatives to zero and solve for the equilibrium points.
+F_e, z_e, theta_e = symbols('F_e, z_e, theta_e')
+equilibrium_system = state_variable_form.subs([(zdd,0.), (zd,0.),(F, F_e), (z, z_e), (thetad, 0.), (thetadd, 0.), (theta, theta_e)])
+equilibrium_system = simplify(equilibrium_system)
+print("Equilibrium system: ")
+display(Math(vlatex(equilibrium_system)))
+equilibrium_points = sp.solve(equilibrium_system, (F_e))
+print("Equilibrium solved for F_e: ", equilibrium_points)
+display(Math(vlatex(equilibrium_points)))
+#%%
 # finding the jacobian with respect to states (A) and inputs (B)
 A = state_variable_form.jacobian(states)
 B = state_variable_form.jacobian(inputs)
