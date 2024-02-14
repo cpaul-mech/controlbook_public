@@ -34,8 +34,9 @@ B = state_variable_form.jacobian(inputs)
 # sub in values for equilibrium points (x_e, u_e) or (x_0, u_0)
 A_lin = simplify(A.subs([(zd,0.), (z,0.), (F, 0.)]))
 B_lin = simplify(B.subs([(zd,0.), (z,0.), (F, 0.)]))
-
+print("A_lin =")
 display(Math(vlatex(A_lin)))
+print("B_lin =")
 display(Math(vlatex(B_lin)))
 
 

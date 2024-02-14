@@ -10,7 +10,7 @@ class ctrlPD:
         zeta = 0.707
         # desired natural frequency
         wn = 2.2 / tr
-        alpha1 = 2.0 * zeta * wn
+        alpha1 = 2.0 * zeta * wn #Shown in my notes 
         alpha0 = wn**2
         # compute PD gains
         self.kp = alpha0*(P.m * P.ell**2) / 3.0
@@ -26,7 +26,7 @@ class ctrlPD:
         tau_fl = P.m * P.g * (P.ell / 2.0) * np.cos(theta)
         # compute the linearized torque using PD
         tau_tilde = self.kp * (theta_r - theta) \
-                    - self.kd * thetadot
+                    - self.kd * thetadot #The \ tells python to continue on the next line
         # compute total torque
         tau = tau_fl + tau_tilde
         tau = saturate(tau, P.tau_max)
