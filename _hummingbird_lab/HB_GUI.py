@@ -6,7 +6,7 @@ from threading import Thread
 
 
 #FIX THIS - Make sure you change 'COM8' to the correct COM port for your computer
-ser = serial.Serial('COM8', 9600)# , timeout=1)
+ser = serial.Serial('COM4', 9600)# , timeout=1)
 
 startMarker = 125
 endMarker = 126
