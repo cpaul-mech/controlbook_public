@@ -21,6 +21,7 @@ display(Math(vlatex(states)))
 print("inputs =")
 display(Math(vlatex(inputs)))
 
+
 #%% [markdown]
 # Set all the derivatives to zero and solve for the equilibrium points.
 z_e, h_e, theta_e, F_e, tau_e = symbols('z_e h_e theta_e F_e tau_e')
@@ -50,5 +51,3 @@ display(Math(vlatex(A_lin)))
 print("B_lin =")
 display(Math(vlatex(B_lin)))
 
-
-# %%
