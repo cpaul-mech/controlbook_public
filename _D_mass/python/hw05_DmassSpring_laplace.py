@@ -7,9 +7,11 @@ from hw04_DmassSpring_EQ import *
 from sympy import laplace_transform
 t, s = symbols('t s')
 # Take the laplace transform of the state_variable_form
-state_variable_form_laplace = laplace_transform(state_variable_form, t, s, noconds=True)
-print("State variable form in Laplace domain:")
-display(Math(vlatex(state_variable_form_laplace)))
+print("full_eom =")
+display(Math(vlatex(full_eom)))
+full_eom_laplace = laplace_transform(full_eom, t, s, noconds=True)
+print("full_eom_laplace =")
+display(Math(vlatex(full_eom_laplace)))
 
 #%% [markdown]
 # Define A, B, C, and D for the system

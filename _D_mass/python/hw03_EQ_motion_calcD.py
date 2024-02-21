@@ -55,7 +55,8 @@ zd = z.diff(t)
 zdd = zd.diff(t)
 
 # defining symbols for external force and friction
-F, b = symbols('F, b')
+b = symbols('b')
+F = dynamicsymbols('F')
 
 # defining the right-hand side of the equation and combining it with E-L part
 RHS = Matrix([[F - b*zd]])
