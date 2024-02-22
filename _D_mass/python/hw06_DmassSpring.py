@@ -36,7 +36,7 @@ display(Math(vlatex(poles_part_b)))
 # %% [markdown]
 ## Part C
 # set these poles equal to the desired poles and solve for the gains k_p and k_d
-desired_poles = [-1.,-1.5]
+desired_poles = [-1.5, -1]
 pole1 = poles_part_b[0]
 pole2 = poles_part_b[1]
 
@@ -51,7 +51,23 @@ k_p_eq = k_p_eq.subs(k_d,k_d_eq)
 k_p_eq = simplify(k_p_eq)
 #%%
 k_p_eq = sp.solve(k_p_eq, k_p)
+k_p_eq = k_p_eq[0]
 print("k_p =")
 display(Math(vlatex(k_p_eq)))
-print("The system of equations for k_p and k_d is being difficult.")
+# %% [markdown]
+# Re-solve for k_d using the new k_p
+k_d_eq = k_d_eq.subs(k_p,k_p_eq)
+print("k_d =")
+display(Math(vlatex(k_d_eq)))
+# %% [markdown]
+## Subsitute in values from massparam file
+import massParam as P
+k_p_eq = k_p_eq.subs([(m1, P.m), (k, P.k)])
+k_d_eq = k_d_eq.subs([(m1, P.m), (b, P.b)])
+print("k_p =")
+display(Math(vlatex(k_p_eq)))
+print("k_d =")
+display(Math(vlatex(k_d_eq)))
+
+
 # %%
