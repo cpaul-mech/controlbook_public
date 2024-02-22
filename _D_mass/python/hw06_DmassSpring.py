@@ -27,7 +27,7 @@ display(Math(vlatex(Z_Zr)))
 
 # %% [markdown]
 # Now solve for the poles of Z/Z_r to find the closed loop poles
-characteristic_eq = Z_Zr *(1/k_p)
+characteristic_eq = Z_Zr *(m1/k_p)
 characteristic_eq = 1/characteristic_eq
 characteristic_eq = simplify(characteristic_eq)
 poles_part_b = sp.solve(characteristic_eq,s)
@@ -51,8 +51,7 @@ k_p_eq = k_p_eq.subs(k_d,k_d_eq)
 k_p_eq = simplify(k_p_eq)
 #%%
 k_p_eq = sp.solve(k_p_eq, k_p)
-k_p_eq = k_p_eq[0]
 print("k_p =")
 display(Math(vlatex(k_p_eq)))
-
+print("The system of equations for k_p and k_d is being difficult.")
 # %%
