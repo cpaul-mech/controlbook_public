@@ -11,6 +11,8 @@ D = Matrix(zeros(3,2))
 # these are the three transfer functions for h, z, and theta with respect to inputs F and tau
 s = symbols('s')
 transfer_func = simplify(C@(s*eye(6)-A_lin).inv() @B_lin+D)
+print("Transfer function full solution:")
+display(Math(vlatex(transfer_func)))
 
 #%%
 # these indices that we select from transfer_func are based on the 

@@ -32,8 +32,8 @@ display(Math(vlatex(D)))
 # Define the Laplace variable and the transfer function
 s = symbols('s')
 G = C*(s*sp.eye(2)-A).inv()*B + D
-G = simplify(G)
-print("G =")
+G = (G*((1/m1)/(1/m1)))
+print(" =")
 display(Math(vlatex(G)))
 
 # %%
