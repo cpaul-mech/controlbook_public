@@ -4,7 +4,9 @@ from hw05_DmassSpring_laplace import *
 #%% [markdown]
 ## Part A
 # find the poles of G, the transfer function for part a
-G_new = G[0]
+import massParam as P
+G_new = G.subs([(m1,P.m), (b,P.b), (k,P.k)])
+G_new = G_new[0]
 G_new = 1/G_new
 G_new = Matrix([[G_new]])
 poles = sp.solve(G_new,s)
