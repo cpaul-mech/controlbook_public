@@ -5,13 +5,13 @@ import hummingbirdParam as P
 class ctrlLonPID:
     def __init__(self):
         # tuning parameters
-        tr_pitch = 
-        zeta_pitch = 
-        self.ki_pitch = 
+        tr_pitch = 2.0 # rise time for pitch control, I specify this and guess.
+        zeta_pitch = 0.707
+        self.ki_pitch = 0.001
         # gain calculation
         b_theta = P.ellT/(P.m1 * P.ell1**2 + P.m2 * P.ell2**2 + P.J1y + P.J2y)
         #print('b_theta: ', b_theta)
-        wn_pitch = 
+        wn_pitch = 2.2/tr_pitch  # natural frequency for pitch
         self.kp_pitch = 
         self.kd_pitch = 
         # print gains to terminal
