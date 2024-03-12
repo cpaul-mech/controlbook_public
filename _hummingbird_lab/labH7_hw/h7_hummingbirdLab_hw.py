@@ -12,12 +12,12 @@ from HB_GUI_V2 import HB_GUI
 
 
 # ----------------Global Variables--------------------
-animate = True
+animate = False
 t = P.t_start
 
 # ----------------Check for Serial Connection--------------------
 try:
-    ser = serial.Serial('COM8', 9600)
+    ser = serial.Serial('COM3', 9600)
 except:
     print()
     print("Hummingbird not connected")

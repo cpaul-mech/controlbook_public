@@ -5,7 +5,7 @@ import hummingbirdParam as P
 class ctrlLonPID:
     def __init__(self):
         # tuning parameters
-        tr_pitch = 2.0 # rise time for pitch control, I specify this and guess.
+        tr_pitch = 0.8 # rise time for pitch control, I specify this and guess.
         zeta_pitch = 0.707
         self.ki_pitch = 0.000 # this makes the integral gain zero, essentially a PD controller
         # gain calculation
