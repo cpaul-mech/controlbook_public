@@ -7,13 +7,13 @@ class ctrlLonPID:
         # tuning parameters
         tr_pitch = 2.0 # rise time for pitch control, I specify this and guess.
         zeta_pitch = 0.707
-        self.ki_pitch = 0.001
+        self.ki_pitch = 0.000 # this makes the integral gain zero, essentially a PD controller
         # gain calculation
         b_theta = P.ellT/(P.m1 * P.ell1**2 + P.m2 * P.ell2**2 + P.J1y + P.J2y)
         #print('b_theta: ', b_theta)
         wn_pitch = 2.2/tr_pitch  # natural frequency for pitch
-        self.kp_pitch = 
-        self.kd_pitch = 
+        self.kp_pitch = wn_pitch**2/b_theta
+        self.kd_pitch = 2.*zeta_pitch*wn_pitch/b_theta
         # print gains to terminal
         print('kp_pitch: ', self.kp_pitch)
         print('ki_pitch: ', self.ki_pitch)
@@ -29,22 +29,23 @@ class ctrlLonPID:
         self.integrator_theta = 0.
         self.error_theta_d1 = 0.  # pitch error delayed by 1
 
-    def update(self, r, y):
+    def update(self, r, y): #r = np.array([[theta_ref.square(t)], [0.]])  y = np.array([[phi], [theta], [psi]])
         theta_ref = r[0][0]
         theta = y[1][0]
-        force_fl = 
+        force_fl = (P.m1*P.ell1 + P.m2*P.ell2)*P.g*np.cos(theta)/P.ellT
         # compute errors
-        error_theta = 
+        error_theta = theta_ref - theta #maybe need to change the order...
         # update differentiators
-        self.theta_dot = 
+        self.theta_dot = self.beta*self.theta_dot + (1-self.beta)*((theta - self.theta_d1) / self.Ts) # dirty derivative, figure out where this comes from.
         
         # update integrators
-        self.integrator_theta = 
+        self.integrator_theta = 0.0
         
         # pitch control
-        force_unsat = 
-        force = saturate(force_unsat, -P.force_max, P.force_max)
-        torque = 0.
+        f_tilde = self.kp_pitch*error_theta - self.kd_pitch*self.theta_dot
+        force_unsat = force_fl + f_tilde
+        force = saturate(force_unsat, -P.force_max, P.force_max) 
+        torque = 0. # always zero for pitch control
         # convert force and torque to pwm signals
         pwm = np.array([[force + torque / P.d],               # u_left
                       [force - torque / P.d]]) / (2 * P.km)   # r_right          
