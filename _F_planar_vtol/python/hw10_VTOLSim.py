@@ -19,8 +19,7 @@ animation = VTOLAnimation()
 
 t = P.t_start  # time starts at t_start
 y = VTOL.h()  # output of system at start of simulation
-import time
-time.sleep(1)
+
 while t < P.t_end:  # main simulation loop
     # Propagate dynamics in between plot samples
     t_next_plot = t + P.t_plot
