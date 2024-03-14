@@ -6,6 +6,7 @@ import numpy as np
 m1 =  0.35 # Mass of the block, kg
 m2 =  2.0 # mass of beam, kg
 length =  0.5 # length of beam, m
+ell = length
 g =  9.81 # gravity at sea level, m/s^2
 
 # parameters for animation
@@ -26,6 +27,7 @@ t_plot = 1.0/30.0  # the plotting and animation is updated at this rate
 
 # saturation limits
 Fmax = 15.0  # Max Force, N 
+F_max = Fmax
 # I have no idea whether this is the correct value for Fmax.
 
 # dirty derivative parameters
