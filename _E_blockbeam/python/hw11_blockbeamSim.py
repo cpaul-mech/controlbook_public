@@ -10,7 +10,7 @@ from dataPlotter import dataPlotter
 blockBeam = blockBeamDynamics(alpha=0.2)
 controller = ctrlPID()
 reference = signalGenerator(amplitude=0.125, frequency=0.02, y_offset=0.25)
-disturbance = signalGenerator(amplitude=0.25, frequency=0.0)
+disturbance = signalGenerator(amplitude=0.25, frequency=0.01)
 
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
@@ -24,7 +24,7 @@ while t < P.t_end:  # main simulation loop
 
     while t < t_next_plot:  # updates control and dynamics at faster simulation rate
         r = reference.square(t)  # reference input
-        d = 0.0 #disturbance.step(t)  # input disturbance
+        d = disturbance.step(t)  # input disturbance
         n = 0.0  #noise.random(t)  # simulate sensor noise, will use in future assignments
         u = controller.update(r, y + n)  # update controller
         y = blockBeam.update(u + d)  # propagate system, "d" is a disturbance used in future assignments

@@ -2,15 +2,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import massParam as P
 from massDynamics import massDynamics
-from ctrlPID import ctrlPID
+from ctrlStateFeedback import ctrlStateFeedback
 from signalGenerator import signalGenerator
 from massAnimation import massAnimation
 from dataPlotter import dataPlotter
 
 # instantiate satellite, controller, and reference classes
 mass = massDynamics(alpha=0.2)
-controller = ctrlPID()
-reference = signalGenerator(amplitude=0.5, frequency=0.04)
+controller = ctrlStateFeedback()
+reference = signalGenerator(amplitude=0.5, frequency=0.1)
 disturbance = signalGenerator(amplitude=0.25)
 
 # instantiate the simulation plots and animation
@@ -25,9 +25,10 @@ while t < P.t_end:  # main simulation loop
 
     while t < t_next_plot:  # updates control and dynamics at faster simulation rate
         r = reference.square(t)  # reference input
-        d = 0.0 #disturbance.step(t)  # input disturbance
+        d = disturbance.step(t)  # input disturbance
         n = 0.0  #noise.random(t)  # simulate sensor noise, will use in future assignments
-        u = controller.update(r, y + n)  # update controller
+        x = mass.state
+        u = controller.update(r, x)  # update controller
         y = mass.update(u + d)  # propagate system, "d" is a disturbance used in future assignments
         t = t + P.Ts  # advance time by Ts
 

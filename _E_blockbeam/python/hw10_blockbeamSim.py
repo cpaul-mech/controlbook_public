@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-import blockBeamParam as P
+import blockbeamParam as P
 from blockBeamDynamics import blockBeamDynamics
 from ctrlPID import ctrlPID
 from signalGenerator import signalGenerator
-from blockBeamAnimation import blockBeamAnimation
+from blockbeamAnimation import blockbeamAnimation
 from dataPlotter import dataPlotter
 
 # instantiate blockBeam, controller, and reference classes
@@ -14,7 +14,7 @@ disturbance = signalGenerator(amplitude=0.25, frequency=0.0)
 
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
-animation = blockBeamAnimation()
+animation = blockbeamAnimation()
 t = P.t_start  # time starts at t_start
 y = blockBeam.h()  # output of system at start of simulation
 
