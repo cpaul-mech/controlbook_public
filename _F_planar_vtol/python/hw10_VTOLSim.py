@@ -19,7 +19,8 @@ animation = VTOLAnimation()
 
 t = P.t_start  # time starts at t_start
 y = VTOL.h()  # output of system at start of simulation
-
+import time
+time.sleep(1)
 while t < P.t_end:  # main simulation loop
     # Propagate dynamics in between plot samples
     t_next_plot = t + P.t_plot
@@ -30,13 +31,14 @@ while t < P.t_end:  # main simulation loop
         r = np.array([[z_ref], [h_ref]])  # reference input
         d = np.array([[0.0], [0.0]])  #disturbance.step(t)  # input disturbance "d" will be used in future assignments
         n = np.array([[0.0], [0.0], [0.0]])  #noise.random(t)  # simulate sensor noise, will use in future assignments
-        u = controller.update(r, y + n)  # update controller
+        x = VTOL.state
+        u = controller.update(r, x)  # update controller
         y = VTOL.update(u + d)  # propagate system
         t = t + P.Ts  # advance time by Ts
         
     # update animation and data plots
     animation.update(VTOL.state, z_ref)
-    dataPlot.update(t, VTOL.state, z_ref, h_ref, u)
+    dataPlot.update(t, VTOL.state, z_ref, h_ref, u.item(0), u.item(1))
     plt.pause(0.0001)  # the pause causes the figure to be displayed during the simulation
 
 # Keeps the program from closing until the user presses a button.

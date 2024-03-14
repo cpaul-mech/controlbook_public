@@ -71,8 +71,8 @@ class VTOLDynamics:
     def rk4_step(self, u):
         # Integrate ODE using Runge-Kutta RK4 algorithm
         F1 = self.f(self.state, u)
-        F2 = self.f(self.state + P.Ts / 2.0 * F1, u)
-        F3 = self.f(self.state + P.Ts / 2.0 * F2, u)
+        F2 = self.f(self.state + P.Ts / 2 * F1, u)
+        F3 = self.f(self.state + P.Ts / 2 * F2, u)
         F4 = self.f(self.state + P.Ts * F3, u)
-        self.state += P.Ts / 6 * (F1 + 2.0 * F2 + 2.0 * F3 + F4)
+        self.state += P.Ts / 6 * (F1 + 2 * F2 + 2 * F3 + F4)
 

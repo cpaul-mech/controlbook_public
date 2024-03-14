@@ -36,7 +36,7 @@ while t < P.t_end:  # main simulation loop
         
     # update animation and data plots
     animation.update(VTOL.state, z_ref)
-    dataPlot.update(t, VTOL.state, z_ref, h_ref, u)
+    dataPlot.update(t, VTOL.state, z_ref, h_ref, u.item(0), u.item(1))
     plt.pause(0.0001)  # the pause causes the figure to be displayed during the simulation
 
 # Keeps the program from closing until the user presses a button.
