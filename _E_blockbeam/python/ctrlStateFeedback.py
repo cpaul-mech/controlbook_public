@@ -8,8 +8,8 @@ class ctrlStateFeedback:
         # State Feedback Control Design
         #--------------------------------------------------
         # tuning parameters
-        tr_z = 1.0        # rise time for position
-        tr_theta = 0.5    # rise time for angle
+        tr_z = 0.82       # rise time for position
+        tr_theta = 0.15    # rise time for angle
         zeta_z = 0.707  # damping ratio position
         zeta_th = 0.707  # damping ratio angle
         # State Space Equations

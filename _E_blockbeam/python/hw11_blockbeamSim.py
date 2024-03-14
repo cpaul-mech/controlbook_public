@@ -9,7 +9,7 @@ from dataPlotter import dataPlotter
 # instantiate blockBeam, controller, and reference classes
 blockBeam = blockBeamDynamics(alpha=0.2)
 controller = ctrlStateFeedback()
-reference = signalGenerator(amplitude=0.125, frequency=0.02, y_offset=0.25)
+reference = signalGenerator(amplitude=0.10, frequency=0.02, y_offset=0.25)
 disturbance = signalGenerator(amplitude=0.25, frequency=0.01)
 
 # instantiate the simulation plots and animation
