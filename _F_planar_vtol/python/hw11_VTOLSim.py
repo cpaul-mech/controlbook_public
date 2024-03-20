@@ -16,7 +16,7 @@ h_reference = signalGenerator(amplitude=3.0, frequency=0.03, y_offset=5.0)
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
 animation = VTOLAnimation()
-
+plt.pause(5) # 5 second delay at the start of the sim to allow me to move the windows!!!
 t = P.t_start  # time starts at t_start
 y = VTOL.h()  # output of system at start of simulation
 
@@ -38,7 +38,7 @@ while t < P.t_end:  # main simulation loop
     # update animation and data plots
     animation.update(VTOL.state, z_ref)
     dataPlot.update(t, VTOL.state, z_ref, h_ref, u.item(0), u.item(1))
-    plt.pause(0.1)  # the pause causes the figure to be displayed during the simulation
+    plt.pause(0.01)  # the pause causes the figure to be displayed during the simulation
 
 # Keeps the program from closing until the user presses a button.
 print('Press key to close')

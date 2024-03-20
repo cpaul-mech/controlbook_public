@@ -15,6 +15,7 @@ disturbance = signalGenerator(amplitude=0.25, frequency=0.01)
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
 animation = blockbeamAnimation()
+plt.pause(5)  # 5 second pause
 t = P.t_start  # time starts at t_start
 y = blockBeam.h()  # output of system at start of simulation
 
