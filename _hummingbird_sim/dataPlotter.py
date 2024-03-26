@@ -65,9 +65,9 @@ class DataPlotter:
         self.phidot_history.append(180.0/np.pi*state[3][0])  # roll rate
         self.thetadot_history.append(180.0/np.pi*state[4][0])  # pitch rate
         self.psidot_history.append(180.0/np.pi*state[5][0])  # psi rate
-        self.phi_ref_history.append(180.0 / np.pi * ref[0][0])  # roll
-        self.theta_ref_history.append(180.0 / np.pi * ref[1][0])  # pitch
-        self.psi_ref_history.append(180.0 / np.pi * ref[2][0])  # psi
+        self.phi_ref_history.append(180.0 / np.pi * ref[0][0])  # roll = phi
+        self.theta_ref_history.append(180.0 / np.pi * ref[1][0])  # pitch = theta
+        self.psi_ref_history.append(180.0 / np.pi * ref[2][0])  # psi = psi
         self.force_history.append(force)  # Force
         self.torque_history.append(torque)  # torque
         # update the plots with associated histories

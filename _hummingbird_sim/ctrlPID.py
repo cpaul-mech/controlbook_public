@@ -2,61 +2,96 @@ import numpy as np
 import hummingbirdParam as P
 
 
-class ctrlLonPID:
+class ctrlPID:
     def __init__(self): #theta for vtol = phi for hummingbird
         # tuning parameters
-        tr_pitch = 0.8 # rise time for pitch control, I specify this and guess.
-        zeta_pitch = 0.707
-        self.ki_pitch = 0.000 # this makes the integral gain zero, essentially a PD controller
-        tr_psi = 0.8
-        zeta_psi = 0.707
-        self.ki_psi = 0.000
-        # gain calculation
+        tr_theta = 0.5 # rise time for pitch control, I specify this and guess.
+        zeta_theta = 0.95
+        self.ki_theta = 0.000 # this makes the integral gain zero, essentially a PD controller
         b_theta = P.ellT/(P.m1 * P.ell1**2 + P.m2 * P.ell2**2 + P.J1y + P.J2y)
-        b_psi = P.ellT*F_e/(P.J1z + P.J2z)#print('b_theta: ', b_theta)
-        wn_pitch = 2.2/tr_pitch  # natural frequency for pitch
-        self.kp_pitch = wn_pitch**2/b_theta
-        self.kd_pitch = 2.*zeta_pitch*wn_pitch/b_psi
-        wn_psi = 2.2/tr_psi
+        wn_theta = np.pi/(2.0*tr_theta*np.sqrt(1-zeta_theta**2))
+        self.kp_theta = wn_theta**2/b_theta
+        self.kd_theta = 2.*zeta_theta*wn_theta/b_theta
+
+        tr_phi = 0.1 ## ROLL CONTROL INNER LOOP!!
+        zeta_phi = 0.707
+        self.ki_phi = 0.000
+        wn_phi = np.pi/(2.*tr_phi*np.sqrt(1-zeta_phi**2))
+        self.kp_phi = wn_phi**2*P.J1x
+        self.kd_phi = 2.*zeta_phi*wn_phi*P.J1x
+
+        M = 10.0  # time separation between inner and outer lateral loops
+        tr_psi = tr_phi*M # YAW CONTROL
+        zeta_psi = 0.67
+        self.ki_psi = 0.000
+        F_e = (P.m1*P.ell1 + P.m2*P.ell2)*P.g/ P.ellT
+        J_T = P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2z + P.m3*(P.ell3x**2 + P.ell3y**2)
+        b_psi = P.ellT*F_e/(J_T + P.J1z)
+        wn_psi = np.pi/(2.*tr_psi*np.sqrt(1-zeta_psi**2))
         self.kp_psi = wn_psi**2/b_psi
         self.kd_psi = 2.*zeta_psi*wn_psi/b_psi
+        
+        
         # print gains to terminal
-        print('kp_pitch: ', self.kp_pitch)
-        print('ki_pitch: ', self.ki_pitch)
-        print('kd_pitch: ', self.kd_pitch) 
+        print('kp_pitch: ', self.kp_theta)
+        print('ki_pitch: ', self.ki_theta)
+        print('kd_pitch: ', self.kd_theta) 
         print('kp_psi: ', self.kp_psi)
         print('ki_psi: ', self.ki_psi)
         print('kd_psi: ', self.kd_psi)
+        print('kp_phi: ', self.kp_phi)
+        print('ki_phi: ', self.ki_phi)
+        print('kd_phi: ', self.kd_phi)
         # sample rate of the controller
         self.Ts = P.Ts
         # dirty derivative parameters
         sigma = 0.05  # cutoff freq for dirty derivative
         self.beta = (2 * sigma - self.Ts) / (2 * sigma + self.Ts)
         # delayed variables
-        self.theta_d1 = 0.
+        self.theta_d1 = 0. #PITCH
         self.theta_dot = 0.
         self.integrator_theta = 0.
         self.error_theta_d1 = 0.  # pitch error delayed by 1
+        self.phi_d1 = 0. #ROLL
+        self.phi_dot = 0.
+        self.integrator_phi = 0.
+        self.error_phi_d1 = 0.
+        self.psi_d1 = 0. #YAW
+        self.psi_dot = 0.
+        self.integrator_psi = 0.
+        self.error_psi_d1 = 0.
+
 
     def update(self, r, y): #r = np.array([[theta_ref.square(t)], [0.]])  y = np.array([[phi], [theta], [psi]])
         theta_ref = r[0][0]
+        psi_ref = r[1][0]
+        phi = y[0][0]
         theta = y[1][0]
+        psi = y[2][0]
         force_fl = (P.m1*P.ell1 + P.m2*P.ell2)*P.g*np.cos(theta)/P.ellT
         # compute errors
         error_theta = theta_ref - theta #maybe need to change the order...
+        error_psi = psi_ref - psi
         # update differentiators
         self.theta_dot = self.beta*self.theta_dot + (1-self.beta)*((theta - self.theta_d1) / self.Ts) # dirty derivative, figure out where this comes from.
+        self.psi_dot = self.beta*self.psi_dot + (1-self.beta)*((psi - self.psi_d1) / self.Ts) # dirty derivative, figure out where this comes from.
+        self.phi_dot = self.beta*self.phi_dot + (1-self.beta)*((phi - self.phi_d1) / self.Ts) # dirty derivative, figure out where this comes from.
         
         # update integrators
         self.integrator_theta = 0.0
+        self.integrator_phi = 0.0
         
         # pitch control
-        f_tilde = self.kp_pitch*error_theta - self.kd_pitch*self.theta_dot
-        # tau tilde something...
+        f_tilde = self.kp_theta*error_theta - self.kd_theta*self.theta_dot
         force_unsat = force_fl + f_tilde
-        force = saturate(force_unsat, -P.force_max, P.force_max) 
-        torque =  tau = saturate( self.kp_th * (theta_ref - theta) - self.kd_th * self.theta_dot, 2*P.F_max*P.d)
+        force = saturate(force_unsat, -P.force_max, P.force_max)
         
+        # roll control
+        phi_ref = self.kp_psi*error_psi - self.kd_psi*self.psi_dot
+        error_phi = phi_ref - phi
+        tau = self.kp_phi*error_phi - self.kd_phi*self.phi_dot
+        torque = saturate(tau, -P.torque_max, P.torque_max)
+
         # convert force and torque to pwm signals
         pwm = np.array([[force + torque / P.d],               # u_left
                       [force - torque / P.d]]) / (2 * P.km)   # r_right          
@@ -64,8 +99,13 @@ class ctrlLonPID:
         # update all delayed variables
         self.theta_d1 = theta
         self.error_theta_d1 = error_theta
+        self.phi_d1 = phi
+        self.error_phi_d1 = error_phi
+        self.psi_d1 = psi
+        self.error_psi_d1 = error_psi
+    
         # return pwm plus reference signals
-        return pwm, np.array([[0.], [theta_ref], [0.]])
+        return pwm, np.array([[phi_ref], [theta_ref], [psi_ref]])
 
 
 def saturate(u, low_limit, up_limit):
