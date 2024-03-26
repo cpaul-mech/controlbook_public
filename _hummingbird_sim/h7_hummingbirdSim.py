@@ -15,7 +15,7 @@ theta_ref = SignalGenerator(amplitude=0.5, frequency=0.1)
 # instantiate the simulation plots and animation
 dataPlot = DataPlotter()
 animation = HummingbirdAnimation()
-
+plt.pause(5)
 t = P.t_start  # time starts at t_start
 y = hummingbird.h()
 while t < P.t_end:  # main simulation loop

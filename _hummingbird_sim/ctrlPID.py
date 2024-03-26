@@ -3,21 +3,30 @@ import hummingbirdParam as P
 
 
 class ctrlLonPID:
-    def __init__(self):
+    def __init__(self): #theta for vtol = phi for hummingbird
         # tuning parameters
         tr_pitch = 0.8 # rise time for pitch control, I specify this and guess.
         zeta_pitch = 0.707
         self.ki_pitch = 0.000 # this makes the integral gain zero, essentially a PD controller
+        tr_psi = 0.8
+        zeta_psi = 0.707
+        self.ki_psi = 0.000
         # gain calculation
         b_theta = P.ellT/(P.m1 * P.ell1**2 + P.m2 * P.ell2**2 + P.J1y + P.J2y)
-        #print('b_theta: ', b_theta)
+        b_psi = P.ellT*F_e/(P.J1z + P.J2z)#print('b_theta: ', b_theta)
         wn_pitch = 2.2/tr_pitch  # natural frequency for pitch
         self.kp_pitch = wn_pitch**2/b_theta
-        self.kd_pitch = 2.*zeta_pitch*wn_pitch/b_theta
+        self.kd_pitch = 2.*zeta_pitch*wn_pitch/b_psi
+        wn_psi = 2.2/tr_psi
+        self.kp_psi = wn_psi**2/b_psi
+        self.kd_psi = 2.*zeta_psi*wn_psi/b_psi
         # print gains to terminal
         print('kp_pitch: ', self.kp_pitch)
         print('ki_pitch: ', self.ki_pitch)
         print('kd_pitch: ', self.kd_pitch) 
+        print('kp_psi: ', self.kp_psi)
+        print('ki_psi: ', self.ki_psi)
+        print('kd_psi: ', self.kd_psi)
         # sample rate of the controller
         self.Ts = P.Ts
         # dirty derivative parameters
@@ -46,7 +55,8 @@ class ctrlLonPID:
         # tau tilde something...
         force_unsat = force_fl + f_tilde
         force = saturate(force_unsat, -P.force_max, P.force_max) 
-        torque = 0. # always zero for pitch control
+        torque =  tau = saturate( self.kp_th * (theta_ref - theta) - self.kd_th * self.theta_dot, 2*P.F_max*P.d)
+        
         # convert force and torque to pwm signals
         pwm = np.array([[force + torque / P.d],               # u_left
                       [force - torque / P.d]]) / (2 * P.km)   # r_right          
