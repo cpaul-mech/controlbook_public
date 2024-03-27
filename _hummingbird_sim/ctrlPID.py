@@ -5,6 +5,7 @@ import hummingbirdParam as P
 class ctrlPID:
     def __init__(self): #theta for vtol = phi for hummingbird
         # tuning parameters
+        # --------------------- PITCH OR THETA CONTROL ---------------------
         tr_theta = 0.5 # rise time for pitch control, I specify this and guess.
         zeta_theta = 0.95
         self.ki_theta = 0.000 # this makes the integral gain zero, essentially a PD controller
@@ -12,14 +13,14 @@ class ctrlPID:
         wn_theta = np.pi/(2.0*tr_theta*np.sqrt(1-zeta_theta**2))
         self.kp_theta = wn_theta**2/b_theta
         self.kd_theta = 2.*zeta_theta*wn_theta/b_theta
-
+        # --------------------- ROLL OR PHI CONTROL ---------------------
         tr_phi = 0.1 ## ROLL CONTROL INNER LOOP!!
         zeta_phi = 0.707
         self.ki_phi = 0.000
         wn_phi = np.pi/(2.*tr_phi*np.sqrt(1-zeta_phi**2))
         self.kp_phi = wn_phi**2*P.J1x
         self.kd_phi = 2.*zeta_phi*wn_phi*P.J1x
-
+        # --------------------- YAW OR PSI CONTROL ---------------------
         M = 10.0  # time separation between inner and outer lateral loops
         tr_psi = tr_phi*M # YAW CONTROL
         zeta_psi = 0.67
@@ -62,7 +63,7 @@ class ctrlPID:
         self.error_psi_d1 = 0.
 
 
-    def update(self, r, y): #r = np.array([[theta_ref.square(t)], [0.]])  y = np.array([[phi], [theta], [psi]])
+    def update(self, r, y): #r = np.array([[theta_ref], [psi_ref]])  y = np.array([[phi], [theta], [psi]])
         theta_ref = r[0][0]
         psi_ref = r[1][0]
         phi = y[0][0]
@@ -94,7 +95,7 @@ class ctrlPID:
 
         # convert force and torque to pwm signals
         pwm = np.array([[force + torque / P.d],               # u_left
-                      [force - torque / P.d]]) / (2 * P.km)   # r_right          
+                      [force - torque / P.d]]) / (2.0 * P.km)   # r_right          
         pwm = saturate(pwm, 0, 1)
         # update all delayed variables
         self.theta_d1 = theta

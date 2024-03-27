@@ -17,7 +17,7 @@ P.controller = P.controller_pitch if P.H_number == 7 else P.controller_km
 
 # ----------------Check for Serial Connection--------------------
 try:
-    ser = serial.Serial('COM8', 19200)# , timeout=1)
+    ser = serial.Serial('COM3', 19200)# , timeout=1)
 except:
     print()
     print("Hummingbird not connected")
