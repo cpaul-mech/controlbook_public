@@ -1,6 +1,6 @@
 import numpy as np
 import control as cnt
-import massParam as P
+import blockbeamParam as P
 
 class ctrlObserver:
     def __init__(self):
@@ -8,35 +8,54 @@ class ctrlObserver:
         # State Feedback Control Design
         #--------------------------------------------------
         # tuning parameters
-        wn_z = 2.0      # rise time for position
-        zeta_z = 0.707  # damping ratio position
+        tr_z = 0.85       # rise time for position
+        tr_theta = 0.25    # rise time for angle
+        zeta_z = 0.95  # damping ratio position
+        zeta_th = 0.95  # damping ratio angle
         integrator_pole = -5.0
-        wn_z_obs = 10.0*wn_z # no idea if this is a good value
-        zeta_z_obs = 0.707
+        tr_z_obs = tr_z/5.0 # rise time for position
+        tr_theta_obs = tr_theta / 5.0 # rise time for angle
         # State Space Equations
         # xdot = A*x + B*u
         # y = C*x
-        self.A = np.array([[0.0, 1.0],[-P.k/P.m, -P.b/P.m]])
-        self.B = np.array([[0.0],[1/P.m]])
-        self.C = np.array(([[1.0, 0.0]]))
-        # form augamented system:
-        Cr = np.array([[1.0, 0.0]]) # I don't think that this C needs to change.
-        A1 = np.vstack((np.hstack((self.A, np.zeros((np.size(self.A,1),1)))),  # A1 doesn't change.
+        self.A = np.array([[0.0, 0.0, 1.0, 0.0],
+                      [0.0, 0.0, 0.0, 1.0],
+                      [0.0, -P.g, 0.0, 0.0],
+                      [-P.m1*P.g/(P.m2*P.ell**2/3.)+P.m1*P.ze**2, 0.0,0.,0.]]) # i suspect that subsituting z_e for zero might work?
+        self.B = np.array([[0.0],
+                      [0.0],
+                      [0.0],
+                      [P.ell/(P.m2*P.ell**2/3.)+P.m1*P.ze**2]])
+        self.C = np.array([[1.0, 0.0, 0.0, 0.0],
+                      [0.0, 1.0, 0.0, 0.0]])
+        # form augmented system
+        Cr = np.array([[1.0, 0.0, 0.0, 0.0]]) # only select z as the controlled output
+        A1 = np.vstack((np.hstack((self.A, np.zeros((np.size(self.A,1),1)))), 
                         np.hstack((-Cr, np.array([[0.0]]))) ))
         B1 = np.vstack( (self.B, 0.0) )
         # gain calculation
-        des_char_poly = np.convolve([1, 2 * zeta_z * wn_z, wn_z**2],[1, -integrator_pole])
+        wn_th = 2.2 / tr_theta  # natural frequency for angle
+        wn_z = 2.2 / tr_z  # natural frequency for position
+        des_char_poly = np.convolve(np.convolve(
+            [1, 2 * zeta_z * wn_z, wn_z**2],
+            [1, 2 * zeta_th * wn_th, wn_th**2]),
+            [1, -integrator_pole])
         des_poles = np.roots(des_char_poly)
-        # Compute the control gains if the system is controllable
+        # Compute the gains if the system is controllable
         if np.linalg.matrix_rank(cnt.ctrb(A1, B1)) != A1.shape[0]:
             print("The system is not controllable")
         else:
             K1 = cnt.place(A1, B1, des_poles)
-            self.K = K1[0,0:2]
-            self.ki = K1[0,2]
-        # compute observer gains
-        des_obs_char_poly = [1, 2*zeta_z_obs*wn_z_obs, wn_z_obs**2]
-        des_obs_poles = np.roots(des_obs_char_poly) # I don't think that we need to use convolve bc few poles.
+            self.K = K1[0][0:4]
+            self.ki = K1[0][4]
+        # Calculate observer gains
+        wn_z_obs = 2.2 / tr_z_obs
+        wn_th_obs = 2.2 / tr_theta_obs
+        des_obs_char_poly = np.convolve(
+            [1, 2 * zeta_z * wn_z_obs, wn_z_obs**2],
+            [1, 2 * zeta_th * wn_th_obs, wn_th_obs**2])
+        des_obs_poles = np.roots(des_obs_char_poly)
+        # compute the observer gains if the system is observable
         if np.linalg.matrix_rank(cnt.ctrb(self.A.T, self.C.T)) != self.A.shape[0]:
             print("The system is not observable")
         else:
@@ -50,10 +69,12 @@ class ctrlObserver:
         self.error_z_d1 = 0.0 # error signal delayed by 1 sample
         # estimated state variables
         self.x_hat = np.array([[0.0], # initial estimate for z
-                                 [0.0]]) # initial estimate for zdot
-        self.F_d1 = 0.0 # Computed Force, delayed by 1 sample
+                             [0.0], # initial estimate for theta
+                             [0.0], # initial estimate for zdot
+                             [0.0]]) # initial estimate for thetadot
+        self.F_d1 = 0.0
 
-    def update(self, z_r, y): # state is [[z]]
+    def update(self, z_r, y): #x = [[z], [theta], [zdot], [thetadot]] 
         # update the observer and extract z_hat
         x_hat = self.update_observer(y)
         z_hat = x_hat[0][0]
@@ -81,7 +102,7 @@ class ctrlObserver:
         # xhat_dot = A*xhat + B*u + L(y_m - C*xhat)
         xhat_dot = self.A @ x_hat \
                      + self.B * self.F_d1 \
-                     + self.L * (y_m - self.C @ x_hat)
+                     + self.L @ (y_m - self.C @ x_hat)
         return xhat_dot
 
 

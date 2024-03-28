@@ -8,10 +8,10 @@ class ctrlStateFeedbackIntegrator:
         # State Feedback Control Design
         #--------------------------------------------------
         # tuning parameters
-        tr_z = 0.82       # rise time for position
-        tr_theta = 0.15    # rise time for angle
-        zeta_z = 0.707  # damping ratio position
-        zeta_th = 0.9  # damping ratio angle
+        tr_z = 1.2       # rise time for position
+        tr_theta = 0.5    # rise time for angle
+        zeta_z = 0.95  # damping ratio position
+        zeta_th = 0.95  # damping ratio angle
         integrator_pole = -5.0
         # State Space Equations
         # xdot = A*x + B*u

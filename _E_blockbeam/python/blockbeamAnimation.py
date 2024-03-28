@@ -1,3 +1,4 @@
+from tkinter import Button
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -15,7 +16,8 @@ import blockbeamParam as P
 # matplotlib.use('gtk4cairo')  # requires pyGObject and pycairo
 matplotlib.use('tkagg')  # requires TkInter
 # matplotlib.use('wxagg')  # requires wxPython
-
+def exit_program(event):
+    exit()
 
 class blockbeamAnimation:
     '''
@@ -30,6 +32,11 @@ class blockbeamAnimation:
         plt.axis([-P.length/5, P.length+P.length/5, -P.length, P.length]) # Change the x,y axis limits
         plt.plot([0.0, P.length], [0.0, 0.0], 'k')    # Draw a base line
         #plt.xlabel('z')
+        self.button_ax = plt.axes([0.8, 0.025, 0.1, 0.075])
+        self.exit_button = plt.Button(self.button_ax, label='Exit', color='r')
+        self.exit_button.label.set_fontweight('bold')
+        self.exit_button.label.set_fontsize(18)
+        self.exit_button.on_clicked(exit_program)
     # Draw blockbeam is the main function that will call the functions:
     # drawBlock, drawBeam to create the animation.
     def update(self, x):
