@@ -35,11 +35,12 @@ class ctrlObserver:
         self.C = np.array([[1.0, 0.0, 0.0, 0.0],
                            [0.0, 1.0, 0.0, 0.0]])
         # form augmented system
-        Cr = np.array([[1, 0]]) @ self.C
+        Cr = np.array([[1, 0]]) @ self.C # selects the first row of C
         A1 = np.concatenate((
                 np.concatenate((self.A, np.zeros((4, 1))), axis=1),
                 np.concatenate((-Cr, np.matrix([[0.0]])), axis=1)),
                 axis=0)
+        print("A1: ", A1)
         B1 = np.concatenate((self.B, np.matrix([[0.0]])), axis=0)
         # control gain calculation
         wn_th = 2.2 / tr_theta  # natural frequency for angle

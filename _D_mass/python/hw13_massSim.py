@@ -9,7 +9,7 @@ from dataPlotter import dataPlotter
 from dataPlotterObserver import dataPlotterObserver
 
 # instantiate satellite, controller, and reference classes
-mass = massDynamics(alpha=0.2)
+mass = massDynamics(alpha=0.0)
 controller = ctrlStateFeedbackIntegrator()
 reference = signalGenerator(amplitude=0.5, frequency=0.1)
 disturbance = signalGenerator(amplitude=0.25)

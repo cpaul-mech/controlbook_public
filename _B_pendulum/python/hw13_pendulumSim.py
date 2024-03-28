@@ -20,7 +20,7 @@ noise_th = signalGenerator(amplitude=0.01)
 dataPlot = dataPlotter()
 dataPlotObserver = dataPlotterObserver()
 animation = pendulumAnimation()
-
+plt.pause(5)
 t = P.t_start  # time starts at t_start
 y = pendulum.h()  # output of system at start of simulation
 
