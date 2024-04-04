@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np 
 import blockbeamParam as P
+from matplotlib.widgets import Button
 # if you are having difficulty with the graphics, 
 # try using one of the following backends. 
 # See https://matplotlib.org/stable/users/explain/backends.html
@@ -33,7 +34,7 @@ class blockbeamAnimation:
         plt.plot([0.0, P.length], [0.0, 0.0], 'k')    # Draw a base line
         #plt.xlabel('z')
         self.button_ax = plt.axes([0.8, 0.025, 0.1, 0.075])
-        self.exit_button = plt.Button(self.button_ax, label='Exit', color='r')
+        self.exit_button = Button(self.button_ax, label='Exit', color='r')
         self.exit_button.label.set_fontweight('bold')
         self.exit_button.label.set_fontsize(18)
         self.exit_button.on_clicked(exit_program)

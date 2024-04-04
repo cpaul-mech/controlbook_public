@@ -89,7 +89,7 @@ class ctrlObserver:
             [0.0]])  # initial estimate for theta_hat_dot
         self.F_d1 = 0.0  # Computed Force, delayed by one sample
         
-    def update(self, z_r, y):
+    def update(self, z_r, y): 
         # update the observer and extract z_hat
         x_hat = self.update_observer(y)
         z_hat = x_hat[0][0]

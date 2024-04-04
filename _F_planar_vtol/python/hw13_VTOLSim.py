@@ -2,19 +2,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 import VTOLParam as P
 from VTOLDynamics import VTOLDynamics
-from ctrlStateFeedbackIntegrator_fromLS import ctrlStateFeedbackIntegrator
+from ctrlObserver import ctrlObserver
 from signalGenerator import signalGenerator
 from VTOLAnimation import VTOLAnimation
 from dataPlotter import dataPlotter
+from dataPlotterObserver import dataPlotterObserver
 
 # instantiate VTOL, controller, and reference classes
-VTOL = VTOLDynamics(alpha=0.2)
-controller = ctrlStateFeedbackIntegrator()
+VTOL = VTOLDynamics(alpha=0.0)
+controller = ctrlObserver()
 z_reference = signalGenerator(amplitude=4.0, frequency=0.02, y_offset=5.0)
 h_reference = signalGenerator(amplitude=3.0, frequency=0.03, y_offset=5.0)
+disturbance = signalGenerator(amplitude=1.0)
+noise = signalGenerator(amplitude=0.01)
 
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
+dataPlotObserver = dataPlotterObserver()
 animation = VTOLAnimation()
 plt.pause(5) # 5 second delay at the start of the sim to allow me to move the windows!!!
 t = P.t_start  # time starts at t_start
@@ -30,13 +34,14 @@ while t < P.t_end:  # main simulation loop
         d = np.array([[0.0], [0.0]])  #disturbance.step(t)  # input disturbance "d" will be used in future assignments
         n = np.array([[0.0], [0.0], [0.0]])  #noise.random(t)  # simulate sensor noise, will use in future assignments
         x = VTOL.state
-        u = controller.update(r, x)  # update controller
+        u, x_hat_lon, x_hat_lat = controller.update(r, y+n)  # update controller
         y = VTOL.update(P.mixing @ (u+d))  # propagate system
         t = t + P.Ts  # advance time by Ts
         
     # update animation and data plots
     animation.update(VTOL.state, z_ref)
     dataPlot.update(t, VTOL.state, z_ref, h_ref, u.item(0), u.item(1))
+    dataPlotObserver.update(t, VTOL.state, x_hat_lat, x_hat_lon)
     plt.pause(0.0001)  # the pause causes the figure to be displayed during the simulation
 
 # Keeps the program from closing until the user presses a button.

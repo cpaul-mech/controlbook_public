@@ -25,6 +25,10 @@ class ctrlStateFeedbackIntegrator:
         B_lon = np.array([[0.0],
                         [1.0 / (P.mc + 2.0 * P.mr)]])
         C_lon = np.array([[1.0, 0.0]])
+        A1_lon = np.vstack((
+                np.hstack((A_lon, np.zeros((2,1)))),
+                np.hstack((-C_lon, np.zeros((1,1))))))
+        B1_lon = np.vstack((B_lon, np.zeros((1,1))))
         A_lat = np.array([[0.0, 0.0, 1.0, 0.0],
                         [0.0, 0.0, 0.0, 1.0],
                         [0.0, -self.Fe / (P.mc + 2.0 * P.mr), -(P.mu / (P.mc + 2.0 * P.mr)), 0.0],
@@ -35,12 +39,8 @@ class ctrlStateFeedbackIntegrator:
                         [1.0 / (P.Jc + 2 * P.mr * P.d ** 2)]])
         C_lat = np.array([[1.0, 0.0, 0.0, 0.0],
                           [0.0, 1.0, 0.0, 0.0]])
-        
         # form augmented system
-        A1_lon = np.vstack((
-                np.hstack((A_lon, np.zeros((2,1)))),
-                np.hstack((-C_lon, np.zeros((1,1))))))
-        B1_lon = np.vstack((B_lon, np.zeros((1,1))))
+        
         A1_lat = np.vstack((
                 np.hstack((A_lat, np.zeros((4,1)))),
                 np.hstack((-C_lat[0:1], np.zeros((1,1))))))
@@ -55,7 +55,7 @@ class ctrlStateFeedbackIntegrator:
         des_char_poly_lat = np.convolve(
             np.convolve([1.0, 2.0 * zeta_z * wn_z, wn_z ** 2],
                         [1.0, 2.0 * zeta_th * wn_th, wn_th ** 2]),
-            [1, integrator_z])
+                        [1, integrator_z])
         
         des_poles_lat = np.roots(des_char_poly_lat)
 
@@ -95,12 +95,10 @@ class ctrlStateFeedbackIntegrator:
         z = x[0][0]
         h = x[1][0]
         theta = x[2][0]
-
         # integrate error
         error_z = z_r - z
         self.integrator_z += (P.Ts/2.0)*(error_z + self.error_z_d1)
         self.error_z_d1 = error_z
-
         error_h = h_r - h
         self.integrator_h += (P.Ts/2.0)*(error_h + self.error_h_d1)
         self.error_h_d1 = error_h

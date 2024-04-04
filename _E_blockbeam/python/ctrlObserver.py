@@ -12,7 +12,7 @@ class ctrlObserver:
         tr_theta = 0.25    # rise time for angle
         zeta_z = 0.95  # damping ratio position
         zeta_th = 0.95  # damping ratio angle
-        integrator_pole = -5.0
+        integrator_pole = -10.0
         tr_z_obs = tr_z/5.0 # rise time for position
         tr_theta_obs = tr_theta / 5.0 # rise time for angle
         # State Space Equations

@@ -30,7 +30,7 @@ class dataPlotterObserver:
 
         # create a handle for every subplot.
         self.handle = []
-        self.handle.append(myPlot(self.ax[0][0], ylabel='z (m)', title='VTOL States'))
+        self.handle.append(myPlot(self.ax[0][0], ylabel='z (m)', title='VTOL Observer Data'))
         self.handle.append(myPlot(self.ax[1][0], ylabel='h (m)'))
         self.handle.append(myPlot(self.ax[2][0], ylabel='theta (deg)'))
         self.handle.append(myPlot(self.ax[0][1], ylabel='z_dot (m/s)'))

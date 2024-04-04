@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import VTOLParam as P
+from VTOLDynamics import VTOLDynamics
+from ctrlStateFeedbackIntegrator2 import ctrlStateFeedbackIntegrator
 from signalGenerator import signalGenerator
 from VTOLAnimation import VTOLAnimation
 from dataPlotter import dataPlotter
-from VTOLDynamics import VTOLDynamics
-from ctrlStateFeedbackIntegrator2 import ctrlStateFeedbackIntegrator
 
 # instantiate VTOL, controller, and reference classes
 VTOL = VTOLDynamics(alpha=0.2)
@@ -16,11 +16,10 @@ h_reference = signalGenerator(amplitude=3.0, frequency=0.03, y_offset=5.0)
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
 animation = VTOLAnimation()
-plt.pause(5)
+plt.pause(5) # 5 second delay at the start of the sim to allow me to move the windows!!!
 t = P.t_start  # time starts at t_start
 y = VTOL.h()  # output of system at start of simulation
 while t < P.t_end:  # main simulation loop
-
     # Propagate dynamics in between plot samples
     t_next_plot = t + P.t_plot
 
