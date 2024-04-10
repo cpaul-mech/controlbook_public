@@ -20,7 +20,7 @@ animation = satelliteAnimation()
 
 t = P.t_start  # time starts at t_start
 y = satellite.h()  # output of system at start of simulation
-
+plt.pause(5)
 while t < P.t_end:  # main simulation loop
     # Propagate dynamics in between plot samples
     t_next_plot = t + P.t_plot
