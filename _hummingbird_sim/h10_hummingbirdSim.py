@@ -24,7 +24,7 @@ while t < P.t_end:  # main simulation loop
     t_next_plot = t + P.t_plot
     while t < t_next_plot:
         d = disturbance.step(t)
-        r = np.array([[0.0], [psi_ref.square(t)]]) #r = [[theta_ref], [psi_ref]]
+        r = np.array([[theta_ref.square(t)], [psi_ref.square(t)]]) #r = [[theta_ref], [psi_ref]]
         u, y_ref = controller.update(r, y)
         y = hummingbird.update(u + d)  # Propagate the dynamics
         t = t + P.Ts  # advance time by Ts

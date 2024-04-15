@@ -6,9 +6,9 @@ class ctrlPID:
     def __init__(self): #theta for vtol = phi for hummingbird
         # tuning parameters
         # --------------------- PITCH OR THETA CONTROL ---------------------
-        tr_theta = 0.6 # rise time for pitch control, I specify this and guess.
+        tr_theta = 0.5 # rise time for pitch control, I specify this and guess.
         zeta_theta = 0.95
-        self.ki_theta = 2.0 # 
+        self.ki_theta = 0.75 # 
         self.ki_thetadot_limit = 5.0
         b_theta = P.ellT/(P.m1 * P.ell1**2 + P.m2 * P.ell2**2 + P.J1y + P.J2y)
         wn_theta = np.pi/(2.0*tr_theta*np.sqrt(1-zeta_theta**2))
@@ -24,7 +24,7 @@ class ctrlPID:
         M = 10.0  # time separation between inner and outer lateral loops
         tr_psi = tr_phi*M # YAW CONTROL
         zeta_psi = 0.73
-        self.ki_psi = 0.01
+        self.ki_psi = 0.1
         F_e = (P.m1*P.ell1 + P.m2*P.ell2)*P.g/ P.ellT
         J_T = P.m1*P.ell1**2 + P.m2*P.ell2**2 + P.J2z + P.m3*(P.ell3x**2 + P.ell3y**2)
         b_psi = P.ellT*F_e/(J_T + P.J1z)
