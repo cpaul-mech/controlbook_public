@@ -18,16 +18,16 @@ print('P_sys =', P_sys)
 # Compute controller transfer functions
 
 # PID xfer function for outer loop
-C_pid = tf([(P10.kd+P10.kp*P10.sigma),
-            (P10.kp+P10.ki*P10.sigma),
-            P10.ki],
-           [P10.sigma, 1, 0])
+C_pid = tf([(P10.kd+P10.kp*P.sigma), (P10.kp+P10.ki*P.sigma), P10.ki],
+           [P.sigma, 1, 0])
+
+print('C*P =', P_sys*C_pid)
 
 #%%
 frequencies = [10**-2, 10**-1]
 
 # Use the control.freqresp() function to return the values at the specified frequencies
-mags, phases, omegas = ctrl.freqresp(P_sys*C_pid, frequencies)
+mags, phases, omegas = ctrl.bode(P_sys*C_pid, frequencies, plot=False, dB=dB_flag)
 
 # Print the values
 print(mags)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     bode([P_sys, P_sys*C_pid],
          omega=omegas, dB=dB_flag)
     plt.legend(['$P(s)$', '$C(s)P(s)$']) #'$\\frac{1}{s^2}$'])
-    fig1.axes[0].set_title('Satellite, Inner Loop')
+    fig1.axes[0].set_title('Mass')
     plt.show()
 
 # %%
