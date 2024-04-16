@@ -12,7 +12,7 @@ hummingbird = HummingbirdDynamics(alpha=0.1)
 controller = ctrlPID()
 psi_ref = SignalGenerator(amplitude=15.*np.pi/180., frequency=1.0/10.0)
 theta_ref = SignalGenerator(amplitude=15.*np.pi/180., frequency=1.0/10.0)
-disturbance = SignalGenerator(amplitude=0.25, frequency= 0.001, y_offset = 0.0)
+disturbance = SignalGenerator(amplitude=0.15, frequency= 0.001, y_offset = 0.0)
 # instantiate the simulation plots and animation
 dataPlot = DataPlotter()
 animation = HummingbirdAnimation()
