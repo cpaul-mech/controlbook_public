@@ -13,28 +13,30 @@ dB_flag = P15.dB_flag
 #%%
 # Compute inner and outer open-loop transfer functions
 P_sys = tf([1/P.m],[1, P.b/P.m, P.k/P.m])
-print('P_sys =', P_sys)
+if __name__ == '__main__':
+    print('P_sys =', P_sys)
 
 # Compute controller transfer functions
 
 # PID xfer function for outer loop
 C_pid = tf([(P10.kd+P10.kp*P.sigma), (P10.kp+P10.ki*P.sigma), P10.ki],
            [P.sigma, 1, 0])
-
-print('C*P =', P_sys*C_pid)
+if __name__ == '__main__':
+    print('C*P =', P_sys*C_pid)
 
 #%%
-frequencies = [10**-2, 10**-1]
+if __name__ == '__main__':
+    frequencies = [10**-2, 10**-1]
 
-# Use the control.freqresp() function to return the values at the specified frequencies
-mags, phases, omegas = ctrl.bode(P_sys*C_pid, frequencies, plot=False, dB=dB_flag)
+    # Use the control.freqresp() function to return the values at the specified frequencies
+    mags, phases, omegas = ctrl.bode(P_sys*C_pid, frequencies, plot=False, dB=dB_flag)
 
-# Print the values
-print(mags)
-# Calculate the slope of the magnitude plot with the specified freq and mag values
-slope = (mags[1] - mags[0]) / frequencies[1] - frequencies[0]
-system_type = slope
-print(system_type)
+    # Print the values
+    print(mags)
+    # Calculate the slope of the magnitude plot with the specified freq and mag values
+    slope = (mags[1] - mags[0]) / frequencies[1] - frequencies[0]
+    system_type = slope
+    print(system_type)
 
 #%%
 if __name__ == '__main__':
