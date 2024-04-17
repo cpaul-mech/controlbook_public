@@ -18,7 +18,7 @@ class ctrlPID:
         M = 10.0  # time separation between inner and outer lateral loops
         zeta_z = 0.9  # damping ratio for outer lateral loop
         zeta_th = 0.9  # damping ratio for inner lateral loop
-        self.ki_h = 0.10  # integrator on altitude
+        self.ki_h = 1.0  # integrator on altitude
 
         # for ki_z, it actually works best if ki_z = 0.0!! This tells us something
         # about the system type. But it is possible to get reasonable performance
@@ -34,7 +34,7 @@ class ctrlPID:
 
         #---------------------------------------------------
         # PD gains for longitudinal (altitude) control
-        wn_h = 2.2 / tr_h  # original equation for natural frequency (before changing zeta from 0.707)
+        wn_h = 0.5*np.pi/(tr_h*np.sqrt(1-zeta_h**2))
         Delta_cl_d = [1, 2 * zeta_h * wn_h, wn_h ** 2.0]  # desired closed loop char eq
         self.kp_h = Delta_cl_d[2] * (P.mc + 2.0 * P.mr)  # kp = altitude
         self.kd_h = Delta_cl_d[1] * (P.mc + 2.0 * P.mr)  # kd = altitude
@@ -43,7 +43,7 @@ class ctrlPID:
         # PD gains for lateral inner loop
         b0       = 1.0/(P.Jc+2.0*P.mr*P.d**2)
         tr_th    = tr_z/M
-        wn_th    = 2.2/tr_th
+        wn_th    = 0.5*np.pi/(tr_th*np.sqrt(1-zeta_th**2))
         self.kp_th  = wn_th**2.0/b0
         self.kd_th  = 2.0*zeta_th*wn_th/b0
 
@@ -51,7 +51,7 @@ class ctrlPID:
         #PD gain for lateral outer loop
         b1       = -self.Fe/(P.mc+2.0*P.mr)
         a1       = P.mu/(P.mc+2.0*P.mr)
-        wn_z     = 2.2/tr_z
+        wn_z     = 0.5*np.pi/(tr_z*np.sqrt(1-zeta_z**2))
         self.kp_z   = wn_z**2.0/b1
         self.kd_z   = (2.0*zeta_z*wn_z-a1)/b1
 

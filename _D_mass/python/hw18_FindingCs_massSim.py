@@ -1,42 +1,41 @@
+#%% [markdown]
+## Homework 18: Finding the C(s) for the system that meet the specifications
+# Import the libraries and starting transfer functions
+from control import bode, tf, margin, mag2db, step_response, tf2ss, c2d
 import matplotlib.pyplot as plt
-from control import tf, bode, margin, step_response, mag2db, tf2ss, c2d
 import numpy as np
-import armParam as P
-import hw16 as P16
 import loopshape_tools as ls
+from discreteFilter import discreteFilter
+# Import the hw_16 transfer functions
+import hw16_massSim as P16
 
 # flag to define if using dB or absolute scale for M(omega)
 dB_flag = P16.dB_flag
 
-# assigning plant and controller from past HW
-# (to make sure we don't introduce additional errors)
-Plant = P16.Plant
+# Compute inner and outer open-loop transfer functions
+Plant = P16.P_sys
 C_pid = P16.C_pid
-
-###################################################################
-#   Control Design
-###################################################################
+#%% 
+###########################################
+# Control Design
+###########################################
 C = C_pid
 
-# # Because our PM starts out good enough, we will skip to adding a
-# # low-pass filter and lag compensator to meet the low-frequency and
-# # high-frequency requirements.
-# C_lpf = ls.get_control_lpf(90.0)
-# C_lag = ls.get_control_lag(z=2, M = 120.0) 
-# C = C*C_lpf*C_lag
+# Because our PM starts out good enough, we will skip to adding a
+# low-pass filter and lag compensator to meet the low-frequency and
+# high-frequency requirements.
 
-# # after checking the requirements, we need to add a lead compensator now,
-# # along with a proportional gain and 2nd low-pass filter to meet the noise 
-# # specification. 
-# C_lead = ls.get_control_lead(omega_lead=6.35, M=10.0)
-# C = C*C_lead
 
-# mag, _, _ = bode(Plant*C, dB=dB_flag, omega=[6.35], plot=False)
-# C_k = ls.get_control_proportional(1/mag[0])
-# C_lpf2 = ls.get_control_lpf(100.0)
 
-# # this is our final controller 
-# C = C*C_k*C_lpf2
+
+
+
+
+
+
+
+
+
 
 
 # ###########################################################
@@ -44,14 +43,6 @@ C = C_pid
 # ###########################################################
 F = ls.get_control_lpf(p=1.0)
 
-
-# ###########################################################
-# # Extracting coefficients for controller and prefilter
-# ###########################################################
-# C_num = np.asarray(C.num[0])
-# C_den = np.asarray(C.den[0])
-# F_num = np.asarray(F.num[0])
-# F_den = np.asarray(F.den[0])
 
 
 if __name__=="__main__":

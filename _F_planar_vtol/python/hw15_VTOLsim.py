@@ -1,4 +1,4 @@
-#%% Inverted Pendulum Parameter File
+#%% VTOL Parameter File
 import VTOLParam as P
 from control import tf, bode
 import matplotlib.pyplot as plt
@@ -12,18 +12,19 @@ dB_flag = False
 
 # Compute inner and outer open-loop transfer functions
 F_H = tf([1.0/(P.mc + 2.0*P.mr)],[1, 0, 0])
-print('F_H =', F_H)
+P_lon = F_H
 #%%
 Tau_theta = tf([(1.0/(P.Jc + 2.0*P.mr*P.d**2))],[1, 0, 0])
-print('Tau_theta =', Tau_theta)
+P_lat_in = Tau_theta
 #%%
 Theta_Z = tf([-P.Fe/(P.mc + 2.0*P.mr)],[1, (P.mu/(P.mc + 2.0*P.mr)), 0])
-print('Theta_Z =', Theta_Z)
-
+P_lat_out = Theta_Z
 
 #%%
 if __name__ == '__main__':
-
+    print('F_H =', F_H)
+    print('Tau_theta =', Tau_theta)
+    print('Theta_Z =', Theta_Z)
     # Plot the open loop bode plots for the inner loop
     fig1 = plt.figure()
     bode(F_H, dB=dB_flag)

@@ -9,8 +9,8 @@ class ctrlLoopshape:
             self.prefilter = transferFunction(L.F_num, L.F_den, P.Ts)
             self.control = transferFunction(L.C_num, L.C_den, P.Ts)
         elif method == "digital_filter":
-            self.prefilter = digitalFilter(L.F.num, L.F.den, P.Ts)
-            self.control = digitalFilter(L.C.num, L.C.den, P.Ts)
+            self.prefilter = digitalFilter(L.F_num, L.F_den, P.Ts)
+            self.control = digitalFilter(L.C_num, L.C_den, P.Ts)
         self.method = method
 
     def update(self, theta_r, y):
