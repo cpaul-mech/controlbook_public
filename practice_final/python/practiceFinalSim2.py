@@ -10,7 +10,7 @@ rodMass = rodMassDynamics()
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
 animation = rodMassAnimation()
-
+plt.pause(4) # wait for animation to initialize
 t = P.t_start
 while t < P.t_end:
     t_next_plot = t + P.t_plot

@@ -16,3 +16,7 @@ t_end = 100.0
 Ts = 0.01
 t_plot = 0.1
 
+# equilibrium force
+theta_e = 0.0
+tau_eq = ell*g*m*np.cos(theta_e) + 0.5*k1*theta_e + k2*theta_e**3
+

@@ -30,7 +30,7 @@ display(Math(vlatex(K)))
 
 # %% # define the potential energy
 k1, k2 = sp.symbols('k1 k2')
-P = 0.5*k1*theta + 0.25*k2*theta**4 + m*g*ell*sin(theta)
+P = k1*theta**2/2 + k2*theta**4/4 + m*g*ell*sin(theta)
 print("P =")
 display(Math(vlatex(P)))
 
