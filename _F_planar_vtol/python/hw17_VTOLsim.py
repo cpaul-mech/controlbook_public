@@ -1,4 +1,4 @@
-# Satellite Parameter File
+#%% Satellite Parameter File
 import VTOLParam as P
 import hw16_VTOLsim as P16
 from control import *
@@ -28,12 +28,11 @@ if __name__ == '__main__':
     if dB_flag:
         gm, pm, Wcg, Wcp = margin(P_lon * C_lon)
         gm = mag2db(gm)
-        print("Inner Loop:", "gm: ", gm,
+        print("Longitudinal Control:", "gm: ", gm,
               " pm: ", pm, " Wcg: ", Wcg, " Wcp: ", Wcp)
-
     else:
         gm, pm, Wcg, Wcp = margin(P_lon * C_lon)
-        print("Inner Loop:", "gm: ", gm,
+        print("Longitudinal Control:", "gm: ", gm,
               " pm: ", pm, " Wcg: ", Wcg, " Wcp: ", Wcp)
 
     # display bode plots of transfer functions
@@ -41,10 +40,10 @@ if __name__ == '__main__':
 
     # this makes two bode plots for open and closed loop
     bode(P_lon * C_lon, omega=omegas, dB=dB_flag,
-         label='$CP$ - Open-loop')
+         label='$C_{lon}*P_{lon}$ - Open-loop')
     bode(P_lon * C_lon / (1 + P_lon * C_lon),
          omega=omegas, dB=dB_flag,
-         label=r'$\frac{PC}{1+PC}$'
+         label=r'$\frac{P_{lon}*C_{lon}}{1+P_{lon}*C_{lon}}$'
                + '- Closed-loop')
 
     # now we can add lines to show where we calculated the GM and PM
@@ -66,12 +65,12 @@ if __name__ == '__main__':
     if dB_flag:
         gm, pm, Wcg, Wcp = margin(P_lat_in *C_lat_in)
         gm = mag2db(gm)
-        print("Inner Loop:", "gm: ", gm,
+        print("Inner loop of Lateral Control:", "gm: ", gm,
               " pm: ", pm, " Wcg: ", Wcg, " Wcp: ", Wcp)
 
     else:
         gm, pm, Wcg, Wcp = margin(P_lat_in *C_lat_in)
-        print("Inner Loop:", "gm: ", gm,
+        print("Inner loop of Lateral Control:", "gm: ", gm,
               " pm: ", pm, " Wcg: ", Wcg, " Wcp: ", Wcp)
 
     # display bode plots of transfer functions
@@ -79,10 +78,10 @@ if __name__ == '__main__':
 
     # this makes two bode plots for open and closed loop
     bode(P_lat_in *C_lat_in, omega=omegas, dB=dB_flag,
-         label='$C_{in}P_{in}$ - Open-loop')
+         label='$C_{latin} * P_{latin}$ - Open-loop')
     bode(P_lat_in *C_lat_in / (1 + P_lat_in *C_lat_in),
          omega=omegas, dB=dB_flag,
-         label=r'$\frac{P_lat_{in}C_lat_{in}}{1+P_lat_in{in}C_lat_{in}}$'
+         label=r'$\frac{P_{latin}C_{latin}}{1+P_{latin}C_{latin}}$'
                + '- Closed-loop')
 
     # now we can add lines to show where we calculated the GM and PM
@@ -104,12 +103,12 @@ if __name__ == '__main__':
     if dB_flag:
         gm, pm, Wcg, Wcp = margin(P_lat_out * C_lat_out)
         gm = mag2db(gm)
-        print("Outer Loop:", "gm: ", gm,
+        print("Outer Loop of Lateral Control:", "gm: ", gm,
               " pm: ", pm, " Wcg: ", Wcg, " Wcp: ", Wcp)
 
     else:
         gm, pm, Wcg, Wcp = margin(P_lat_out * C_lat_out)
-        print("Outer Loop:", "gm: ", gm,
+        print("Outer Loop of Lateral Control:", "gm: ", gm,
               " pm: ", pm, " Wcg: ", Wcg, " Wcp: ", Wcp)
 
     # display bode plots of transfer functions
@@ -117,10 +116,10 @@ if __name__ == '__main__':
 
     # this makes two bode plots for open and closed loop
     bode(P_lat_out * C_lat_out, omega=omegas, dB=dB_flag,
-         label='$C_lat_out P_lat_out$ - Open-loop')
+         label='$C_{latout} * P_{latout}$ - Open-loop')
     bode(P_lat_out * C_lat_out / (1 + P_lat_out * C_lat_out),
          omega=omegas, dB=dB_flag,
-         label=r'$\frac{P_lat_{out}C_lat_{out}}{1+P_lat_{out}C_lat_{out}}$'
+         label=r'$\frac{P_{latout}*C_{latout}}{1+P_{latout}C_{latout}}$'
                + ' - Closed-loop')
 
     # now we can add lines to show where we calculated the GM and PM
@@ -139,3 +138,5 @@ if __name__ == '__main__':
 
     print('Close window to end program')
     plt.show()
+
+# %%

@@ -5,6 +5,11 @@ from control import bode, tf, margin, mag2db, step_response, tf2ss, c2d
 import matplotlib.pyplot as plt
 import numpy as np
 import loopshape_tools as ls
+import sympy as sp
+from IPython.display import Math, display
+from sympy.physics.vector.printing import vpprint, vlatex
+
+lt = ls
 from discreteFilter import discreteFilter
 # Import the hw_16 transfer functions
 import hw16_massSim as P16
@@ -14,6 +19,7 @@ dB_flag = P16.dB_flag
 
 # Compute inner and outer open-loop transfer functions
 Plant = P16.P_sys
+P = Plant
 C_pid = P16.C_pid
 #%% 
 ###########################################
@@ -21,27 +27,24 @@ C_pid = P16.C_pid
 ###########################################
 C = C_pid
 
-# Because our PM starts out good enough, we will skip to adding a
-# low-pass filter and lag compensator to meet the low-frequency and
-# high-frequency requirements.
+# # Track reference signals with frequency content below 0.1 rad/s to within gamma_r = 0.03
+# omega_r = 0.1 # rad/s
+# gamma_r = 0.03 
+# C_ref = ls.add_spec_ref_tracking(gamma_r, omega_r, dB_flag)
+# # C = C * C_ref
 
-
-
-
-
-
-
-
-
-
-
+# # Attenuate noise with frequency content above 500 rad/s by gamma_n = 0.001
+# omega_n = 500 # rad/s
+# gamma_n = 0.001
+# C_noise = ls.add_spec_noise(gamma_n, omega_n, dB_flag)
+# # C = C * C_noise
 
 
 
 # ###########################################################
 # # add a prefilter to eliminate the overshoot
 # ###########################################################
-F = ls.get_control_lpf(p=1.0)
+F = ls.get_control_lpf(p=0.6)
 
 
 
@@ -66,19 +69,27 @@ if __name__=="__main__":
     #########################################
     #   Define Design Specifications
     #########################################
-    #----------- noise specification --------
-    omega_n = 1000
-    mag, phase, omega = bode(Plant*C_pid, db=dB_flag, plot=False, omega=[omega_n])
-    ls.add_spec_noise(gamma_n=mag[0]*0.1, omega_n=omega_n, dB_flag=dB_flag) 
+    # Track reference signals with frequency content below 0.1 rad/s to within gamma_r = 0.03
+    omega_r = 0.1 # rad/s
+    gamma_r = 0.03
+    ls.add_spec_ref_tracking(gamma_r, omega_r, dB_flag)
 
-    #----------- general tracking specification --------
-    omega_d = 0.07
+    # Attenuate noise with frequency content above 500 rad/s by gamma_n = 0.001
+    omega_n = 500 # rad/s
+    gamma_n = 0.001
+    ls.add_spec_noise(gamma_n, omega_n, dB_flag)
+
+    # Reject constant input disturbances by showing the system type of the final CP
+    # s = sp.symbols('s')
+    # E_D = P/(1+P*C)
+    # E_D = sp.simplify(E_D)
+    # print("E_D =")
+    # display(Math(vlatex(E_D)))
+    # print("Steady state error for disturbance input:\n")
+    # print("unit step input =", sp.limit(s*E_D*(1/s),s, 0))
+    # print("unit ramp input =", sp.limit(s*E_D*(1/s**2),s, 0))
+    # print("unit parabolic input =", sp.limit(s*E_D*(1/s**3),s, 0))
     
-    # need both of these magnitudes to calculate current gamma_d, 
-    # then improve it by factor of 10
-    mag_PC, phase, omega = bode(Plant*C_pid, db=dB_flag, plot=False, omega=[omega_d])
-    mag_P, phase, omega = bode(Plant, db=dB_flag, plot=False, omega=[omega_d])
-    ls.add_spec_input_disturbance(gamma_d=mag_P/(mag_PC*10), omega_d=omega_d, system=Plant, dB_flag=dB_flag)
 
 
     #########################################
