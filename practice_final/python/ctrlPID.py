@@ -1,5 +1,5 @@
 import numpy as np
-import rodMassParam as P
+import rodMassParam as PE
 
 
 class ctrlPID:

@@ -1,5 +1,5 @@
 import numpy as np
-import rodMassParam as P
+import rodMassParam as PE
 
 class controllerObsv:
     def __init__(self):
@@ -11,15 +11,15 @@ class controllerObsv:
         self.tau_d1 = 0.0  # control torque, delayed by one sample
         self.integrator = 0.0  # integrator
         self.error_d1 = 0.0  # error signal delayed by 1 sample
-        self.K = P.K  # state feedback gain
-        self.ki = P.ki2  # Input gain
-        self.L = P.L2  # observer gain
-        self.A = P.A2  # system model
-        self.B = P.B2
-        self.C = P.C2
-        self.limit = P.tau_max
-        self.tau_eq = P.tau_eq
-        self.Ts = P.Ts  # sample rate of controller
+        self.K = PE.K  # state feedback gain
+        self.ki = PE.ki2  # Input gain
+        self.L = PE.L2  # observer gain
+        self.A = PE.A2  # system model
+        self.B = PE.B2
+        self.C = PE.C2
+        self.limit = PE.tau_max
+        self.tau_eq = PE.tau_eq
+        self.Ts = PE.Ts  # sample rate of controller
 
     def update(self, theta_r, y):
         return tau, x_hat, d_hat

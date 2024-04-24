@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np 
-import rodMassParam as P
+import rodMassParam as PE
 
 
 class rodMassAnimation:

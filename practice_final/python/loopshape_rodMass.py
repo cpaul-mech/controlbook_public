@@ -1,4 +1,4 @@
-import rodMassParam as P
+import rodMassParam as PE
 import matplotlib.pyplot as plt
 from control import TransferFunction as tf
 import control as cnt

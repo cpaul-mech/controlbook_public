@@ -1,5 +1,5 @@
 import numpy as np
-import rodMassParam as P
+import rodMassParam as PE
 import control as cnt
 
 class ctrlObsv:

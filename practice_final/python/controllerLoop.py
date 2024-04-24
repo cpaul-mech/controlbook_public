@@ -1,4 +1,4 @@
-import rodMassParam as P
+import rodMassParam as PE
 import loopshape_rodMass as L
 import numpy as np
 
@@ -16,9 +16,9 @@ class controllerLoop:
         self.x_C = np.zeros((n, 1))
         n = self.A_F.shape[0]
         self.x_F = np.zeros((n, 1))
-        self.limit = P.tau_max
-        self.tau_eq = P.tau_eq
-        self.Ts = P.Ts
+        self.limit = PE.tau_max
+        self.tau_eq = PE.tau_eq
+        self.Ts = PE.Ts
 
     def update(self, theta_r, y):
         theta = y.item(0)

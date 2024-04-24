@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import rodMassParam as P
+import rodMassParam as PE
 from signalGenerator import signalGenerator
 from rodMassAnimation import rodMassAnimation
 from dataPlotter import dataPlotter
@@ -19,17 +19,17 @@ dataPlot = dataPlotter()
 dataPlotObserver = dataPlotterObserver()
 animation = rodMassAnimation()
 
-t = P.t_start
+t = PE.t_start
 y = rodMass.h()
-while t < P.t_end:
-    t_next_plot = t + P.t_plot
+while t < PE.t_end:
+    t_next_plot = t + PE.t_plot
     while t < t_next_plot:
         r = reference.square(t)
         d = disturbance.step(t)
         n = 0.0  #noise.random(t)
         u, xhat, dhat = controller.update(r, y + n)
         y = rodMass.update(u + d)
-        t = t + P.Ts
+        t = t + PE.Ts
     # update animation and data plots
     animation.update(rodMass.state)
     dataPlot.update(t, r, rodMass.state, u)

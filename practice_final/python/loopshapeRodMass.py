@@ -1,4 +1,4 @@
-import rodMassParam as P
+import rodMassParam as PE
 import matplotlib.pyplot as plt
 from control import TransferFunction as tf
 from control import tf, bode, margin, step_response, mag2db

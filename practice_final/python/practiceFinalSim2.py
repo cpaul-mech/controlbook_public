@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import rodMassParam as P
+import rodMassParam as PE
 from rodMassAnimation import rodMassAnimation
 from dataPlotter import dataPlotter
 from rodMassDynamics import rodMassDynamics
@@ -11,13 +11,13 @@ rodMass = rodMassDynamics()
 dataPlot = dataPlotter()
 animation = rodMassAnimation()
 plt.pause(4) # wait for animation to initialize
-t = P.t_start
-while t < P.t_end:
-    t_next_plot = t + P.t_plot
+t = PE.t_start
+while t < PE.t_end:
+    t_next_plot = t + PE.t_plot
     while t < t_next_plot:
-        u = P.tau_eq
+        u = PE.tau_eq
         y = rodMass.update(u)
-        t = t + P.Ts
+        t = t + PE.Ts
     # update animation and data plots
     animation.update(rodMass.state)
     dataPlot.update(t, 0, rodMass.state, u)

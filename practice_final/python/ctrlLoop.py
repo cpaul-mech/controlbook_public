@@ -1,4 +1,4 @@
-import rodMassParam as P
+import rodMassParam as PE
 import loopshapeRodMass as L
 import numpy as np
 from control import tf, c2d, tf2ss
@@ -8,15 +8,15 @@ from control import tf, c2d, tf2ss
 class ctrlLoop:
     def __init__(self, method="state_space"):
         if method == "state_space":
-            self.prefilter = transferFunction(L.F_num, L.F_den, P.Ts)
-            self.control = transferFunction(L.C_num, L.C_den, P.Ts)
+            self.prefilter = transferFunction(L.F_num, L.F_den, PE.Ts)
+            self.control = transferFunction(L.C_num, L.C_den, PE.Ts)
 
         elif method == "digital_filter":
-            self.prefilter = discreteFilter(L.F.num, L.F.den, P.Ts)
-            self.control = discreteFilter(L.C.num, L.C.den, P.Ts)
+            self.prefilter = discreteFilter(L.F.num, L.F.den, PE.Ts)
+            self.control = discreteFilter(L.C.num, L.C.den, PE.Ts)
 
-        self.limit = P.tau_max  # Maximum torque
-        self.Ts = P.Ts  # sample rate of
+        self.limit = PE.tau_max  # Maximum torque
+        self.Ts = PE.Ts  # sample rate of
         self.method = method
 
     def update(self, theta_r, y):
@@ -28,7 +28,7 @@ class ctrlLoop:
         # update controller
         tau_tilde = self.control.update(error)
         # compute equilibrium torque tau_e
-        tau_e = P.m * P.g * P.ell
+        tau_e = PE.m * PE.g * PE.ell
         # compute total torque
         tau = self.saturate(tau_e + tau_tilde)
         return tau

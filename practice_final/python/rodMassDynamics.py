@@ -1,5 +1,5 @@
 import numpy as np
-import rodMassParam as P
+import rodMassParam as PE
 
 class rodMassDynamics:
     def __init__(self, alpha=0.0):
@@ -7,14 +7,14 @@ class rodMassDynamics:
             [0.0],
             [0.0]
         ])  # initial angular rate
-        self.m = P.m * (1.+alpha*(2.*np.random.rand()-1.))  # Mass of the arm, kg
-        self.ell = P.ell * (1.+alpha*(2.*np.random.rand()-1.))  # Length of the arm, m
-        self.k1 = P.k1 * (1.+alpha*(2.*np.random.rand()-1.))  # Damping coefficient, Ns
-        self.k2 = P.k2 * (1.+alpha*(2.*np.random.rand()-1.))  # Damping coefficient, Ns
-        self.b = P.b * (1.+alpha*(2.*np.random.rand()-1.))  # Damping coefficient, Ns
-        self.g = P.g  # the gravity constant is well known and so we don't change it.
-        self.Ts = P.Ts  # sample rate at which the dynamics are propagated
-        self.torque_limit = P.tau_max
+        self.m = PE.m * (1.+alpha*(2.*np.random.rand()-1.))  # Mass of the arm, kg
+        self.ell = PE.ell * (1.+alpha*(2.*np.random.rand()-1.))  # Length of the arm, m
+        self.k1 = PE.k1 * (1.+alpha*(2.*np.random.rand()-1.))  # Damping coefficient, Ns
+        self.k2 = PE.k2 * (1.+alpha*(2.*np.random.rand()-1.))  # Damping coefficient, Ns
+        self.b = PE.b * (1.+alpha*(2.*np.random.rand()-1.))  # Damping coefficient, Ns
+        self.g = PE.g  # the gravity constant is well known and so we don't change it.
+        self.Ts = PE.Ts  # sample rate at which the dynamics are propagated
+        self.torque_limit = PE.tau_max
 
     def update(self, u):
         u = self.saturate(u, self.torque_limit)
