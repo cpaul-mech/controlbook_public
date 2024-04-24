@@ -50,7 +50,7 @@ class rodMassAnimation:
             # Add the patch to the axes
             self.ax.add_patch(self.handle[2])
         else:
-            self.handle[2].xy = center
+            self.handle[2]._xy = center
 
     def draw_rod(self, theta):
         # specify x-y points of the rod

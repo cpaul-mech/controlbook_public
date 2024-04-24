@@ -13,6 +13,7 @@ dB_flag = P15.dB_flag
 #%%
 # Compute inner and outer open-loop transfer functions
 P_sys = tf([1/P.m],[1, P.b/P.m, P.k/P.m])
+Plant = P_sys
 if __name__ == '__main__':
     print('P_sys =', P_sys)
 

@@ -1,4 +1,4 @@
-import hw16 as P16
+import hw16_massSim as P16
 import matplotlib.pyplot as plt
 from control import tf, bode, margin, mag2db, tf2ss, step_response
 import numpy as np

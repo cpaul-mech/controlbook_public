@@ -1,4 +1,5 @@
 import numpy as np
+import control as cnt
 
 # physical parameters
 m = 0.1
@@ -11,6 +12,7 @@ tau_max = 3
 
 # simulation parameters
 t_start = 0.0
-t_end = 20.0
+t_end = 100.0
 Ts = 0.01
 t_plot = 0.1
+
