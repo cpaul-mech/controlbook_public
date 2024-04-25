@@ -10,12 +10,12 @@ mass = massDynamics()
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
 animation = massAnimation()
-
+plt.pause(5) 
 t = P.t_start
 while t < P.t_end:
     t_next_plot = t + P.t_plot
     while t < t_next_plot:
-        u = P.F_e
+        u = P.F_eq
         y = mass.update(u)
         t = t + P.Ts
     # update animation and data plots

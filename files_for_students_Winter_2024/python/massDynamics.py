@@ -3,7 +3,10 @@ import massParam as P
 
 class massDynamics:
     def __init__(self, alpha=0.0):
-        self.state =
+        self.state = np.array([
+            [0.0],  # initial position
+            [0.0]  # initial velocity
+        ])
         self.g = P.g
         self.theta = 45 * np.pi / 180 * (1.+alpha*(2.*np.random.rand()-1.))
         self.m = P.m * (1.+alpha*(2.*np.random.rand()-1.))
@@ -23,7 +26,13 @@ class massDynamics:
     def f(self, state, F):
         # Return xdot = f(x,u), the system state update equations
         # re-label states for readability
+        z = state.item(0)
+        zdot = state.item(1)
 
+        xdot = np.array([
+            [zdot],
+            [1/self.m * (F - self.b*zdot - self.k1*z - self.k2*z**3 + self.m*self.g/np.sqrt(2.0))]
+        ])
         return xdot
 
     def h(self):
