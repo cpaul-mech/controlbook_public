@@ -3,6 +3,7 @@ import sympy as sp
 from sympy.physics.vector import dynamicsymbols
 from sympy.physics.vector.printing import vpprint, vlatex
 from IPython.display import Math, display
+import numpy as np
 import rodMassParam as P
 #%% 
 from sympy import sin, cos, diff, Matrix, symbols, Function, pretty_print, simplify, init_printing, latex
@@ -93,5 +94,43 @@ print("A_lin =")
 display(Math(vlatex(A_lin)))
 print("B_lin =")
 display(Math(vlatex(B_lin)))
+# %%
+C = Matrix([[1, 0]])
+D = Matrix([[0]])
+# %% 
+s = sp.symbols('s')
+transfer_f = C @ ((s*sp.eye(2,2)-A_lin).inv()) @ B_lin + D
+transfer_f = simplify(transfer_f)
+print("Transfer function =")
+display(Math(vlatex(transfer_f)))
+Plant = transfer_f[0]
+# %%
+Theta, Theta_r, k_p, k_d, s = sp.symbols('Theta Theta_r k_p k_d s')
+eq1 = sp.Eq(Theta, Plant*(k_p*(Theta_r-Theta) - k_d*s*Theta))
+
+print("eq1 =")
+display(Math(vlatex(eq1)))
+# Solve for Theta,
+k_p_act = 3.0/(20.*(np.pi/180.))
+Theta = sp.solve(eq1, Theta)
+Theta = Theta[0]
+Theta = Theta.subs([(ell, P.ell), (m, P.m), (b, P.b),(k1, P.k1)])
+Theta = simplify(Theta)
+Theta = Theta/Theta_r
+print("Theta =")
+display(Math(vlatex(Theta)))
+# %%
+w_n = np.sqrt(160.0*(0.02 + k_p_act))
+zeta = 0.707
+eq2 = sp.Eq(2*zeta*w_n, 160.0*(0.1 + k_d))
+print("eq2 =")
+display(Math(vlatex(eq2)))
+k_d = sp.solve(eq2, k_d)
+k_d = k_d[0]
+k_d = simplify(k_d)
+print("k_d =")
+display(Math(vlatex(k_d)))
+# %%
+
 
 # %%

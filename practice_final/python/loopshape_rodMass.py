@@ -1,4 +1,4 @@
-import rodMassParam as PE
+import rodMassParam as P
 import matplotlib.pyplot as plt
 from control import TransferFunction as tf
 import control as cnt
@@ -95,8 +95,8 @@ def add_control_lead(C, w_L, M):
     return C * Lead
 
 # Compute plant transfer functions
-Plant =
-C_pid =
+Plant = 
+C_pid = 
 
 PLOT = True
 #PLOT = False

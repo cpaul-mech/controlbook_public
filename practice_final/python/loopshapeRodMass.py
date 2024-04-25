@@ -4,8 +4,8 @@ from control import TransferFunction as tf
 from control import tf, bode, margin, step_response, mag2db
 import numpy as np
 import loopshape_tools as ls
-from ctrlPID import ctrlPID
-PID = ctrlPID()
+from controllerPID import controllerPID
+PID = controllerPID()
 
 # Compute plant transfer functions
 Plant = 
@@ -17,7 +17,7 @@ dB_flag = True
 #######################################################################
 #   Control Design
 #######################################################################
-C = 
+C = C_pid
 
 ###########################################################
 # add a prefilter to eliminate the overshoot
@@ -47,7 +47,9 @@ if __name__ == "__main__":
     #########################################
     #   Define Design Specifications
     #########################################
-
+    #----------- noise specification --------
+    omega_n = 1000
+    gamma_n = 
     # plot the effect of adding the new compensator terms
     mag, phase, omega = bode(Plant * C, dB=dB_flag,
                              omega=np.logspace(-4, 5),

@@ -17,7 +17,7 @@ class rodMassDynamics:
         self.torque_limit = PE.tau_max
 
     def update(self, u):
-        u = self.saturate(u, self.torque_limit)
+        u = saturate(u, self.torque_limit)
         self.rk4_step(u)  # propagate the state by one time sample
         y = self.h()  # return the corresponding output
         return y
@@ -27,6 +27,7 @@ class rodMassDynamics:
         # re-label states for readability
         theta = state.item(0)
         thetadot = state.item(1)
+        
         xdot = np.array([
             [thetadot],
             [(-self.g/self.ell)*np.cos(theta)
@@ -54,7 +55,7 @@ class rodMassDynamics:
         F4 = self.f(self.state + self.Ts * F3, u)
         self.state += self.Ts / 6 * (F1 + 2 * F2 + 2 * F3 + F4)
 
-    def saturate(self, u, limit):
-        if abs(u) > limit:
-            u = limit * np.sign(u)
-        return u
+def saturate(u, limit):
+    if abs(u) > limit:
+        u = limit * np.sign(u)
+    return u

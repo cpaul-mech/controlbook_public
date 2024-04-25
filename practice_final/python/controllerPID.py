@@ -17,12 +17,30 @@ class controllerPID:
         self.tau_eq = PE.tau_eq
 
     def update(self, theta_r, y):
+        theta = y[0][0]
+        error = theta_r - theta
+        self.integrator = self.integrator \
+            + (PE.Ts / 2) * (error + self.error_d1)
+        # differentiate theta
+        self.theta_dot = self.beta * self.theta_dot + (1 - self.beta) * ((theta - self.theta_d1) / PE.Ts)
+        # PID control
+        tau_tilde = self.kp * error \
+            + self.ki * self.integrator \
+                - self.kd * self.theta_dot
+        tau_unsat = self.tau_eq + tau_tilde
+        tau = saturate(tau_unsat, self.limit)
+
+        if self.ki != 0.0:
+            self.integrator = self.integrator \
+                + PE.Ts / self.ki * (tau - tau_unsat)
+        self.error_d1 = error
+        self.theta_d1 = theta
         return tau
 
-    def saturate(self, u):
-        if abs(u) > self.limit:
-            u = self.limit*np.sign(u)
-        return u
+def saturate(u, limit):
+    if abs(u) > limit:
+        u = limit * np.sign(u)
+    return u
 
 
 

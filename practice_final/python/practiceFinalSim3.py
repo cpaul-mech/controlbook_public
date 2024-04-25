@@ -16,16 +16,16 @@ disturbance = signalGenerator(amplitude=0.5)
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
 animation = rodMassAnimation()
-
+plt.pause(3) # Allow time for the plot to open
 t = PE.t_start
 y = rodMass.h()
 while t < PE.t_end:
     t_next_plot = t + PE.t_plot
     while t < t_next_plot:
         r = reference.square(t)
-        d = disturbance.step(t)
+        d = 0.0#disturbance.step(t)
         n = 0.0  #noise.random(t)
-        u = controller.update(r, y + n)
+        u = controller.update(r, y)
         y = rodMass.update(u + d)
         t = t + PE.Ts
     # update animation and data plots

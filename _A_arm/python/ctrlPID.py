@@ -9,8 +9,8 @@ class ctrlPID:
         zeta = 0.90
         self.ki = 0.2  # integrator gain
         # desired natural frequency
-        wn = 2.2 / tr
-        #wn = 0.5*np.pi/(tr*np.sqrt(1-zeta**2))
+        # wn = 2.2 / tr
+        wn = 0.5*np.pi/(tr*np.sqrt(1-zeta**2))
         alpha1 = 2.0 * zeta * wn
         alpha0 = wn**2
         # compute PD gains
