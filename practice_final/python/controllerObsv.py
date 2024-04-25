@@ -3,10 +3,9 @@ import rodMassParam as PE
 
 class controllerObsv:
     def __init__(self):
-        self.observer_state = np.array([
+        self.x_hat = np.array([
             [0.0],  # estimate of theta
             [0.0],  # estimate of theta_hat
-            [0.0],  # estimate of disturbance
         ])
         self.tau_d1 = 0.0  # control torque, delayed by one sample
         self.integrator = 0.0  # integrator
@@ -39,16 +38,14 @@ class controllerObsv:
         self.tau_d1 = tau
         return tau, x_hat
 
-    def update_observer(self, y):
-        # update the observer using RK4 integration
-        F1 = self.observer_f(self.observer_state, y)
-        F2 = self.observer_f(self.observer_state + self.Ts / 2 * F1, y)
-        F3 = self.observer_f(self.observer_state + self.Ts / 2 * F2, y)
-        F4 = self.observer_f(self.observer_state + self.Ts * F3, y)
-        self.observer_state += self.Ts / 6 * (F1 + 2 * F2 + 2 * F3 + F4)
-        x_hat = np.array([[self.observer_state.item(0)],[self.observer_state.item(1)]])
-        d_hat = self.observer_state.item(2)
-        return x_hat, d_hat
+    def update_observer(self, y_m):
+    # update the observer using RK4 integration
+        F1 = self.observer_f(self.x_hat, y_m)
+        F2 = self.observer_f(self.x_hat + PE.Ts / 2 * F1, y_m)
+        F3 = self.observer_f(self.x_hat + PE.Ts / 2 * F2, y_m)
+        F4 = self.observer_f(self.x_hat + PE.Ts * F3, y_m)
+        self.x_hat += PE.Ts / 6 * (F1 + 2 * F2 + 2 * F3 + F4)
+        return self.x_hat
 
     def observer_f(self, x_hat, y_m):
         # compute feedback linearizing torque tau_fl
