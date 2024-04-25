@@ -23,7 +23,7 @@ while t < PE.t_end:
     t_next_plot = t + PE.t_plot
     while t < t_next_plot:
         r = reference.square(t)
-        d = 0.0#disturbance.step(t)
+        d = disturbance.step(t)
         n = 0.0  #noise.random(t)
         u = controller.update(r, y)
         y = rodMass.update(u + d)

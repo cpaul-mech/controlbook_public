@@ -5,7 +5,7 @@ class controllerPID:
 
     def __init__(self):
         self.kp = PE.kp
-        self.ki = PE.ki
+        self.ki = PE.ki1
         self.kd = PE.kd
         self.limit = PE.tau_max
         self.beta = (2*PE.sigma-PE.Ts)/(2*PE.sigma+PE.Ts)

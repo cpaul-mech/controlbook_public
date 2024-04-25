@@ -13,16 +13,31 @@ class controllerObsv:
         self.error_d1 = 0.0  # error signal delayed by 1 sample
         self.K = PE.K  # state feedback gain
         self.ki = PE.ki2  # Input gain
-        self.L = PE.L2  # observer gain
-        self.A = PE.A2  # system model
-        self.B = PE.B2
-        self.C = PE.C2
+        self.L = PE.L  # observer gain
+        self.A = PE.A  # system model
+        self.B = PE.B
+        self.C = PE.C
         self.limit = PE.tau_max
         self.tau_eq = PE.tau_eq
         self.Ts = PE.Ts  # sample rate of controller
 
     def update(self, theta_r, y):
-        return tau, x_hat, d_hat
+        # update the observer and extract theta_hat
+        x_hat = self.update_observer(y)
+        theta_hat = x_hat[0][0]
+        # integrate error
+        error = theta_r - theta_hat
+        self.integrator = self.integrator \
+                          + (PE.Ts / 2.0) * (error + self.error_d1)
+        self.error_d1 = error
+        # feedback linearizing torque tau_fl
+        tau_fl = self.tau_eq
+        # Compute the state feedback controller
+        tau_tilde = -self.K @ x_hat - self.ki * self.integrator
+        # compute total torque
+        tau = saturate(tau_fl + tau_tilde[0], PE.tau_max)
+        self.tau_d1 = tau
+        return tau, x_hat
 
     def update_observer(self, y):
         # update the observer using RK4 integration
@@ -35,13 +50,19 @@ class controllerObsv:
         d_hat = self.observer_state.item(2)
         return x_hat, d_hat
 
-    def observer_f(self, x_hat, y):
+    def observer_f(self, x_hat, y_m):
+        # compute feedback linearizing torque tau_fl
+        theta_hat = x_hat[0][0]
+        tau_fl = self.tau_eq
+        # xhatdot = A*(xhat-xe) + B*(u-ue) + L(y-C*xhat)
+        xhat_dot = self.A @ x_hat\
+                   + self.B * (self.tau_d1 - tau_fl)\
+                   + self.L * (y_m - self.C @ x_hat)
         return xhat_dot
 
-    def integrateError(self, error):
 
-    def saturate(self,u):
-        if abs(u) > self.limit:
-            u = self.limit*np.sign(u)
-        return u
+def saturate(u, limit):
+    if abs(u) > limit:
+        u = limit * np.sign(u)
+    return u
 

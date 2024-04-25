@@ -130,7 +130,6 @@ k_d = k_d[0]
 k_d = simplify(k_d)
 print("k_d =")
 display(Math(vlatex(k_d)))
-# %%
 
-
-# %%
+# %% now display the roots of the characteristic equation
+char_eq = sp.Eq(s**2 + 2*zeta*w_n*s + w_n**2, 0)
