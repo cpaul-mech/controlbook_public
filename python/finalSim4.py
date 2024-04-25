@@ -5,17 +5,19 @@ from signalGenerator import signalGenerator
 from massAnimation import massAnimation
 from dataPlotter import dataPlotter
 from massDynamics import massDynamics
-from controllerPID import controllerPID
+from controllerObsv import controllerObsv
+from dataPlotterObserver import dataPlotterObserver
 
 # instantiate system, controller, and reference classes
 mass = massDynamics()
-controller = controllerPID()
+controller = controllerObsv()
 reference = signalGenerator(amplitude=0.5, frequency=0.05)
 disturbance = signalGenerator(amplitude=0.1)
 noise = signalGenerator(amplitude=0.01)
 
 # instantiate the simulation plots and animation
 dataPlot = dataPlotter()
+dataPlotObserver = dataPlotterObserver()
 animation = massAnimation()
 
 t = P.t_start
@@ -24,14 +26,15 @@ while t < P.t_end:
     t_next_plot = t + P.t_plot
     while t < t_next_plot:
         r = reference.square(t)
-        d = 0.0#disturbance.step(t)
+        d = disturbance.step(t)
         n = 0.0  #noise.random(t)
-        u = controller.update(r, y + n)
+        u, xhat = controller.update(r, y + n)
         y = mass.update(u + d)
         t = t + P.Ts
     # update animation and data plots
     animation.update(mass.state)
     dataPlot.update(t, r, mass.state, u)
+    dataPlotObserver.update(t, mass.state, xhat)
     plt.pause(0.0001)
 
 # Keeps the program from closing until the user presses a button.
